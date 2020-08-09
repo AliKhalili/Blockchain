@@ -20,6 +20,6 @@ namespace SHPA.Blockchain.Configuration
         /// <summary>
         /// IP address of host that node provided
         /// </summary>
-        public IPAddress Host { get; set; }
+        public string Host { get; set; }
     }
 }

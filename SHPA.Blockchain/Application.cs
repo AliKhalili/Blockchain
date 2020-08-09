@@ -1,12 +1,19 @@
 ﻿using System.Threading;
+using SHPA.Blockchain.Server;
 
 namespace SHPA.Blockchain
 {
     public class Application
     {
-        public void Run(CancellationTokenSource cancellationToken)
-        {
+        private readonly IServer _server;
 
+        public Application(IServer server)
+        {
+            _server = server;
+        }
+        public void Run(CancellationToken cancellationToken)
+        {
+            _server.Start(cancellationToken);
         }
     }
 }
