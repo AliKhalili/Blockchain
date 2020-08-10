@@ -15,7 +15,7 @@ namespace SHPA.Blockchain.Server
             var type = typeof(IAction);
             var actions = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
-                .Where(p => type.IsAssignableFrom(p) && !type.IsAbstract && !type.IsInterface).ToList();
+                .Where(p => type.IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
 
             foreach (var action in actions)
             {
