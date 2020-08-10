@@ -19,7 +19,7 @@ namespace SHPA.Blockchain.Server
 
             foreach (var action in actions)
             {
-                _actions.Add(action.Name, (IAction)Activator.CreateInstance(type));
+                _actions.Add(action.Name, (IAction)Activator.CreateInstance(action));
             }
         }
         public IAction Create(HttpListenerRequest request)

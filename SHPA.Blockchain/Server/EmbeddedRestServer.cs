@@ -29,6 +29,7 @@ namespace SHPA.Blockchain.Server
             _listener.Prefixes.Add($"http://{_option.Host}:{_option.Port}/");
             _listener.Start();
             Console.WriteLine($"server start on http://{_option.Host}:{_option.Port} at {DateTime.Now:s}");
+
             while (true)
             {
                 _listener.GetContextAsync().ContinueWith(ContinuationAction, cancellationToken).Wait(cancellationToken);

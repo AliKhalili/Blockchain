@@ -8,7 +8,7 @@ namespace SHPA.Blockchain.Server.ActionResult
     {
         public (int HttpStatusCode, string Content) GetResult()
         {
-            return ((int)HttpStatusCode.NotFound, "{ 'success':false, 'error':'not found'}");
+            return ((int)HttpStatusCode.NotFound, "{ 'success':false, 'error':'not found' }");
         }
     }
 }
