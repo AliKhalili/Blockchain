@@ -19,12 +19,12 @@ namespace SHPA.Blockchain.Server
 
             foreach (var action in actions)
             {
-                _actions.Add(action.Name, (IAction)Activator.CreateInstance(action));
+                _actions.Add(action.Name.Substring(0, action.Name.Length - "action".Length).ToLower(), (IAction)Activator.CreateInstance(action));
             }
         }
         public IAction Create(HttpListenerRequest request)
         {
-            var actionName = request.Url.LocalPath;
+            var actionName = request.Url.LocalPath.Substring(1).ToLower();
             if (_actions.ContainsKey(actionName))
                 return _actions[actionName];
 

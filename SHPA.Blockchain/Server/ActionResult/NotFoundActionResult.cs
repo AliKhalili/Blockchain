@@ -4,11 +4,10 @@ using System.Text;
 
 namespace SHPA.Blockchain.Server.ActionResult
 {
-    public class NotFoundActionResult : IActionResult
+    public class NotFoundActionResult : ActionResult
     {
-        public (int HttpStatusCode, string Content) GetResult()
+        public NotFoundActionResult() : base(new { success = false }, HttpStatusCode.NotFound)
         {
-            return ((int)HttpStatusCode.NotFound, "{ 'success':false, 'error':'not found' }");
         }
     }
 }
