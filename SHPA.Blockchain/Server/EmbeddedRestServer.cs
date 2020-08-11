@@ -30,10 +30,15 @@ namespace SHPA.Blockchain.Server
             _listener.Start();
             Console.WriteLine($"server start on http://{_option.Host}:{_option.Port} at {DateTime.Now:s}");
 
-            while (true)
+            Task.Run(() =>
             {
-                _listener.GetContextAsync().ContinueWith(ContinuationAction, cancellationToken).Wait(cancellationToken);
-            }
+                while (true)
+                {
+                    _listener.GetContextAsync().ContinueWith(ContinuationAction, cancellationToken)
+                        .Wait(cancellationToken);
+                }
+            }, cancellationToken);
+
         }
 
         private void ContinuationAction(Task<HttpListenerContext> taskListener)

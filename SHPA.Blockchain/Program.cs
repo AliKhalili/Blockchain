@@ -16,7 +16,7 @@ namespace SHPA.Blockchain
             ConfigureServices(serviceCollection);
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
-            var cancellationTokenSource = new CancellationToken();
+            var cancellationTokenSource = new CancellationTokenSource();
             serviceProvider.GetService<Application>().Run(cancellationTokenSource);
         }
 
