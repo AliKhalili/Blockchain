@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace SHPA.Blockchain.Blocks
 {
@@ -28,13 +26,7 @@ namespace SHPA.Blockchain.Blocks
 
         public (int Index, string Hash) Hash()
         {
-            var sb = new StringBuilder();
-            using var hash = SHA256.Create();
-            byte[] result = hash.ComputeHash(Encoding.UTF8.GetBytes(ToString()));
-
-            foreach (var b in result)
-                sb.Append(b.ToString("x2"));
-            return (_index, sb.ToString());
+            return (_index, ToString().SHA256());
         }
     }
 }
