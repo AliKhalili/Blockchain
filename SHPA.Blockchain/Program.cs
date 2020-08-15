@@ -3,8 +3,10 @@ using System.IO;
 using System.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.Configuration;
 using SHPA.Blockchain.Server;
+using SHPA.Blockchain.Server.Actions;
 
 namespace SHPA.Blockchain
 {
@@ -16,6 +18,7 @@ namespace SHPA.Blockchain
             ConfigureServices(serviceCollection);
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
+
             var cancellationTokenSource = new CancellationTokenSource();
             serviceProvider.GetService<Application>().Run(cancellationTokenSource);
         }
@@ -30,9 +33,12 @@ namespace SHPA.Blockchain
             serviceCollection.LoadConfiguration(configuration);
 
             serviceCollection.AddTransient<Application>();
+            serviceCollection.AddSingleton<IBlockchain, Blocks.Blockchain>();
             serviceCollection.AddTransient<IServer, EmbeddedRestServer>();
             serviceCollection.AddTransient<IRequestHandler, RestHandler>();
             serviceCollection.AddTransient<IActionFactory, ActionFactory>();
+            serviceCollection.AddTransient<IProofOfWork, DefaultProofOfWork>();
+            serviceCollection.AddTransient<AddTransactionAction>();
         }
     }
 }

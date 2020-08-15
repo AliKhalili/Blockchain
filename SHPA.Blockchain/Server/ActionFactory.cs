@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Microsoft.Extensions.DependencyInjection;
 using SHPA.Blockchain.Server.Actions;
 
 namespace SHPA.Blockchain.Server
@@ -9,7 +10,7 @@ namespace SHPA.Blockchain.Server
     public class ActionFactory : IActionFactory
     {
         private readonly Dictionary<string, IAction> _actions;
-        public ActionFactory()
+        public ActionFactory(IServiceProvider serviceProvider)
         {
             _actions = new Dictionary<string, IAction>();
             var type = typeof(IAction);
@@ -19,7 +20,7 @@ namespace SHPA.Blockchain.Server
 
             foreach (var action in actions)
             {
-                _actions.Add(action.Name.Substring(0, action.Name.Length - "action".Length).ToLower(), (IAction)Activator.CreateInstance(action));
+                _actions.Add(action.Name.Substring(0, action.Name.Length - "action".Length).ToLower(), (IAction)serviceProvider.GetService(action));
             }
         }
         public IAction Create(HttpListenerRequest request)
