@@ -4,29 +4,28 @@ namespace SHPA.Blockchain.Blocks
 {
     public class Block<T> where T : class
     {
-        private readonly int _index;
-        private readonly long _proofOfWork;
-        private readonly DateTime _time;
-        private readonly T[] _transactions;
-        private readonly string _previousHash;
-
         public Block(int index, DateTime time, T[] transactions, string previousHash, long proofOfWork)
         {
-            _index = index;
-            _time = time;
-            _transactions = transactions;
-            _previousHash = previousHash;
-            _proofOfWork = proofOfWork;
+            Index = index;
+            Time = time;
+            Transactions = transactions;
+            PreviousHash = previousHash;
+            ProofOfWork = proofOfWork;
         }
+        public long ProofOfWork { get; }
+        public int Index { get; }
+        public DateTime Time { get; }
+        public T[] Transactions { get; }
+        public string PreviousHash { get; }
+        public string BlockHash => Hash().Hash;
 
         public override string ToString()
         {
-            return $"i:{_index}| t:{_time:s}| d:{_transactions.Length}| p:{_proofOfWork}| h:{_previousHash}";
+            return $"i:{Index}| t:{Time:s}| d:{Transactions.Length}| p:{ProofOfWork}| h:{PreviousHash}";
         }
-
         public (int Index, string Hash) Hash()
         {
-            return (_index, ToString().SHA256());
+            return (Index, ToString().SHA256());
         }
     }
 }
