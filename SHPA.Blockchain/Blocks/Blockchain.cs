@@ -26,7 +26,7 @@ namespace SHPA.Blockchain.Blocks
         private Block<Transaction> AddBlock(long proofOfWork)
         {
             var (lastIndex, previousHash) = GetLastBlock().Hash();
-            var newBlock = new Block<Transaction>(lastIndex++, DateTime.UtcNow, _transactions.ToArray(), previousHash, proofOfWork);
+            var newBlock = new Block<Transaction>(++lastIndex, DateTime.UtcNow, _transactions.ToArray(), previousHash, proofOfWork);
             _chain.Add(newBlock);
             _transactions = new List<Transaction>();
             return newBlock;

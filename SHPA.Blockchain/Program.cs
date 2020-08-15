@@ -40,6 +40,7 @@ namespace SHPA.Blockchain
             serviceCollection.AddTransient<IProofOfWork, DefaultProofOfWork>();
             serviceCollection.AddTransient<AddTransactionAction>();
             serviceCollection.AddTransient<MineAction>();
+            serviceCollection.AddTransient<ChainAction>();
         }
     }
 }
