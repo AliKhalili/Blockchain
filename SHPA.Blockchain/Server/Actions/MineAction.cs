@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Net;
-using Newtonsoft.Json;
+﻿using System.Net;
 using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.Server.ActionResult;
 

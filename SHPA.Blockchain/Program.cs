@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.Configuration;
+using SHPA.Blockchain.Nodes;
 using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.Actions;
 
@@ -34,6 +35,7 @@ namespace SHPA.Blockchain
 
             serviceCollection.AddTransient<Application>();
             serviceCollection.AddSingleton<IBlockchain, Blocks.Blockchain>();
+            serviceCollection.AddSingleton<INodeManager, NodeManager>();
             serviceCollection.AddTransient<IServer, EmbeddedRestServer>();
             serviceCollection.AddTransient<IRequestHandler, RestHandler>();
             serviceCollection.AddTransient<IActionFactory, ActionFactory>();
@@ -42,6 +44,7 @@ namespace SHPA.Blockchain
             serviceCollection.AddTransient<MineAction>();
             serviceCollection.AddTransient<ChainAction>();
             serviceCollection.AddTransient<ValidateChainAction>();
+            serviceCollection.AddTransient<RegisterNodeAction>();
         }
     }
 }

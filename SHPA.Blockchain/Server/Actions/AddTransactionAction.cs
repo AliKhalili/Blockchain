@@ -1,12 +1,10 @@
-﻿using System.IO;
-using System.Net;
-using Newtonsoft.Json;
+﻿using System.Net;
 using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.Server.ActionResult;
 
 namespace SHPA.Blockchain.Server.Actions
 {
-    public class AddTransactionAction : IAction
+    public class AddTransactionAction : ActionBase
     {
         private readonly IBlockchain _blockchain;
 
@@ -14,23 +12,14 @@ namespace SHPA.Blockchain.Server.Actions
         {
             _blockchain = blockchain;
         }
-        public IActionResult Execute(HttpListenerRequest request)
+        public override IActionResult Execute(HttpListenerRequest request)
         {
-            if (!request.HasEntityBody || request.HttpMethod != "POST")
+            var input = ParseBody<Transaction>(request);
+            if (input != null)
             {
-                return new NotFoundActionResult();
-            }
-
-            using Stream body = request.InputStream;
-            using StreamReader reader = new StreamReader(body, request.ContentEncoding);
-            var content = reader.ReadToEnd();
-            if (!string.IsNullOrEmpty(content))
-            {
-                var input = JsonConvert.DeserializeObject<Transaction>(content);
                 _blockchain.AddTransaction(input.Sender, input.Receiver, input.Amount);
                 return new JsonActionResult<Transaction>(input);
             }
-
             return new NotFoundActionResult();
         }
     }

@@ -26,9 +26,9 @@ namespace SHPA.Blockchain.Server
             if (_listener != null)
                 throw new InvalidOperationException("server is already running");
             _listener = new HttpListener();
-            _listener.Prefixes.Add($"http://{_option.Host}:{_option.Port}/");
+            _listener.Prefixes.Add($"{_option.GetFullAddress()}/");
             _listener.Start();
-            Console.WriteLine($"server start on http://{_option.Host}:{_option.Port} at {DateTime.Now:s}");
+            Console.WriteLine($"node {_option.Name} start on {_option.GetFullAddress()} at {DateTime.UtcNow:s}");
 
             Task.Run(() =>
             {

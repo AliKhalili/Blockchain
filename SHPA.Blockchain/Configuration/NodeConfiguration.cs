@@ -21,5 +21,12 @@ namespace SHPA.Blockchain.Configuration
         /// IP address of host that node provided
         /// </summary>
         public string Host { get; set; }
+
+        public int MaxNodeCapacity { get; set; }
+
+        public string GetFullAddress()
+        {
+            return $"http://{Host}:{Port}";
+        }
     }
 }
