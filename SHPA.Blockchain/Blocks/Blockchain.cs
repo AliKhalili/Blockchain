@@ -17,21 +17,13 @@ namespace SHPA.Blockchain.Blocks
             _proofOfWork = proofOfWork;
             _chain = new List<Block<Transaction>>
             {
-                new Block<Transaction>(0,DateTime.UtcNow,new Transaction[0],"previous_hash",proofOfWork.InitialProof())
+                GetGenesisBlock()
             };
             _transactions = new List<Transaction>();
             _option = option.Value;
         }
 
-        private Block<Transaction> AddBlock(long proofOfWork)
-        {
-            var (lastIndex, previousHash) = GetLastBlock().Hash();
-            var newBlock = new Block<Transaction>(++lastIndex, DateTime.UtcNow, _transactions.ToArray(), previousHash, proofOfWork);
-            _chain.Add(newBlock);
-            _transactions = new List<Transaction>();
-            return newBlock;
 
-        }
 
         public void AddTransaction(string sender, string receiver, double amount)
         {
@@ -50,9 +42,55 @@ namespace SHPA.Blockchain.Blocks
             return _chain.ToArray();
         }
 
+        public bool IsValidChain()
+        {
+            return IsValidChain(_chain);
+        }
+
+        private Block<Transaction> GetGenesisBlock()
+        {
+            return new Block<Transaction>(0, DateTime.UtcNow, new Transaction[0], "genesis_block", _proofOfWork.InitialProof());
+        }
+
+        private bool IsValidChain(IList<Block<Transaction>> chain)
+        {
+            if (chain.Count <= 1)
+            {
+                return true;
+            }
+
+            var index = 0;
+            var previousHash = chain[0].Hash;
+            foreach (var block in chain)
+            {
+                if (index == 0)
+                {
+                    index++;
+                    continue;
+                }
+                if (!block.PreviousHash.Equals(previousHash))
+                    return false;
+                if (!block.Hash.Equals(block.ComputeHash()))
+                    return false;
+                
+                previousHash = block.Hash;
+                index++;
+            }
+
+            return true;
+        }
         private Block<Transaction> GetLastBlock()
         {
             return _chain.Last();
+        }
+        private Block<Transaction> AddBlock(long proofOfWork)
+        {
+            var lastBlock = GetLastBlock();
+            var newBlock = new Block<Transaction>((lastBlock.Index + 1), DateTime.UtcNow, _transactions.ToArray(), lastBlock.Hash, proofOfWork);
+            _chain.Add(newBlock);
+            _transactions.Clear();
+            return newBlock;
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 
 namespace SHPA.Blockchain
 {
@@ -13,6 +14,11 @@ namespace SHPA.Blockchain
             foreach (var b in result)
                 sb.Append(b.ToString("x2"));
             return sb.ToString();
+        }
+
+        public static string Multiply(this string input, int count)
+        {
+            return string.Concat(Enumerable.Repeat(input, count));
         }
     }
 }

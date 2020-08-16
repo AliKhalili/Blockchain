@@ -11,21 +11,22 @@ namespace SHPA.Blockchain.Blocks
             Transactions = transactions;
             PreviousHash = previousHash;
             ProofOfWork = proofOfWork;
+            Hash = ComputeHash();
         }
         public long ProofOfWork { get; }
         public int Index { get; }
         public DateTime Time { get; }
         public T[] Transactions { get; }
         public string PreviousHash { get; }
-        public string BlockHash => Hash().Hash;
+        public string Hash { get; }
 
         public override string ToString()
         {
             return $"i:{Index}| t:{Time:s}| d:{Transactions.Length}| p:{ProofOfWork}| h:{PreviousHash}";
         }
-        public (int Index, string Hash) Hash()
+        public string ComputeHash()
         {
-            return (Index, ToString().SHA256());
+            return ToString().SHA256();
         }
     }
 }
