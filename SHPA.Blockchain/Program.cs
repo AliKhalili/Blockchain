@@ -4,6 +4,7 @@ using System.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SHPA.Blockchain.Blocks;
+using SHPA.Blockchain.Client;
 using SHPA.Blockchain.Configuration;
 using SHPA.Blockchain.Nodes;
 using SHPA.Blockchain.Server;
@@ -40,6 +41,7 @@ namespace SHPA.Blockchain
             serviceCollection.AddTransient<IRequestHandler, RestHandler>();
             serviceCollection.AddTransient<IActionFactory, ActionFactory>();
             serviceCollection.AddTransient<IProofOfWork, DefaultProofOfWork>();
+            serviceCollection.AddTransient<RestClient>();
             serviceCollection.AddTransient<AddTransactionAction>();
             serviceCollection.AddTransient<MineAction>();
             serviceCollection.AddTransient<ChainAction>();

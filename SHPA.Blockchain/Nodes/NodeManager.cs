@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Extensions.Options;
 using SHPA.Blockchain.Blocks;
+using SHPA.Blockchain.Client;
 using SHPA.Blockchain.Configuration;
+using SHPA.Blockchain.Server.ActionResult;
 
 namespace SHPA.Blockchain.Nodes
 {
@@ -20,8 +24,18 @@ namespace SHPA.Blockchain.Nodes
 
         public void Ping()
         {
+            var watch = new Stopwatch();
             foreach (var node in _nodes)
             {
+                watch.Start();
+                var ping = RestClient.Make(node.Value.Address).Get().Execute<JsonResultModel<DateTime>>("ping");
+                watch.Reset();
+                var nodeTime = "NAN";
+                if (ping != null && ping.Success)
+                {
+                    nodeTime = ping.Result.ToString("s");
+                }
+                Console.WriteLine($"Reply from {node.Key}: time={watch.Elapsed.Milliseconds}ms node_time={nodeTime}");
 
             }
         }
