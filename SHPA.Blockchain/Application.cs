@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using SHPA.Blockchain.Blocks;
+using SHPA.Blockchain.Nodes;
 using SHPA.Blockchain.Server;
 
 namespace SHPA.Blockchain
@@ -11,17 +12,21 @@ namespace SHPA.Blockchain
     {
         private readonly IServer _server;
         private readonly IBlockchain _blockchain;
+        private readonly INodeManager _nodeManager;
+
         private readonly Dictionary<string, (string Help, Func<string, CancellationTokenSource, bool> Func)> _commands;
 
-        public Application(IServer server, IBlockchain blockchain)
+        public Application(IServer server, IBlockchain blockchain, INodeManager nodeManager)
         {
             _server = server;
             _blockchain = blockchain;
+            _nodeManager = nodeManager;
             _commands = new Dictionary<string, (string Help, Func<string, CancellationTokenSource, bool> Func)>
             {
                 {"quit", ("in order to quit and close application completely",QuitCommand)},
                 {"help", ("show help", HelpCommand)},
                 {"mine", ("mine and add new block to blockchain, transaction list will be empty", MineCommand)},
+                {"register_node", ("register new node by adding -n name -u address", MineCommand)},
 
             };
         }
@@ -62,7 +67,7 @@ namespace SHPA.Blockchain
                 Console.WriteLine($"{cm.Key} :{cm.Value.Help}");
             }
             Console.WriteLine("-".Multiply(70));
-           
+
             return true;
         }
 

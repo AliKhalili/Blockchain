@@ -1,6 +1,8 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using SHPA.Blockchain.Server.ActionResult;
 
 namespace SHPA.Blockchain.Server
 {
@@ -16,7 +18,15 @@ namespace SHPA.Blockchain.Server
         {
             var context = await taskListener;
             HttpListenerRequest request = context.Request;
-            var result = _actionFactory.Create(request).Execute(request);
+            IActionResult result;
+            try
+            {
+                result = _actionFactory.Create(request).Execute(request);
+            }
+            catch (Exception e)
+            {
+                result = new ActionResult<object>().AddErrors(new[] { e.InnerException?.Message ?? e.Message }, HttpStatusCode.InternalServerError);
+            }
 
             HttpListenerResponse response = context.Response;
             response.ContentType = "application/json";

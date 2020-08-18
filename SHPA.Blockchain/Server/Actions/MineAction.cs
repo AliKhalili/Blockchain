@@ -18,7 +18,7 @@ namespace SHPA.Blockchain.Server.Actions
             {
                 return new NotFoundActionResult();
             }
-            return new JsonActionResult<Block<Transaction>>(_blockchain.Mine());
+            return new ActionResult<Block<Transaction>>().AddResult(_blockchain.Mine());
         }
     }
 }

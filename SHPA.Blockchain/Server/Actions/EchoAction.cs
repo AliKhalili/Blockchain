@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using SHPA.Blockchain.Server.ActionResult;
 
 namespace SHPA.Blockchain.Server.Actions
@@ -8,7 +7,7 @@ namespace SHPA.Blockchain.Server.Actions
     {
         public IActionResult Execute(HttpListenerRequest request)
         {
-            return new JsonActionResult<string>(request.QueryString["term"]);
+            return new ActionResult<string>().AddResult(request.QueryString["term"]);
         }
     }
 }

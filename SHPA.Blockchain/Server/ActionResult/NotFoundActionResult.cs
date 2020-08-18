@@ -1,13 +1,12 @@
-﻿using System;
-using System.Net;
-using System.Text;
+﻿using System.Net;
 
 namespace SHPA.Blockchain.Server.ActionResult
 {
-    public class NotFoundActionResult : ActionResult
+    public class NotFoundActionResult : ActionResult<string>
     {
-        public NotFoundActionResult() : base(new { success = false }, HttpStatusCode.NotFound)
+        public NotFoundActionResult()
         {
+            AddErrors(new[] { "action is not founded" }, HttpStatusCode.NotFound);
         }
     }
 }

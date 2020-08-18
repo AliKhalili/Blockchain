@@ -29,14 +29,15 @@ namespace SHPA.Blockchain.Nodes
             {
                 watch.Start();
                 var ping = RestClient.Make(node.Value.Address).Get().Execute<JsonResultModel<DateTime>>("ping");
-                watch.Reset();
                 var nodeTime = "NAN";
                 if (ping != null && ping.Success)
                 {
                     nodeTime = ping.Result.ToString("s");
                 }
-                Console.WriteLine($"Reply from {node.Key}: time={watch.Elapsed.Milliseconds}ms node_time={nodeTime}");
 
+                var elapsedTime = watch.Elapsed.Milliseconds;
+                Console.WriteLine($"Reply from {node.Key}: time={elapsedTime}ms node_time={nodeTime}");
+                watch.Reset();
             }
         }
 
@@ -46,6 +47,10 @@ namespace SHPA.Blockchain.Nodes
                 return (false, "maximum capacity is exceeded");
             if (_nodes.ContainsKey(node.Name))
                 return (false, $"node {node.Name} was registered previously");
+            
+            var ping = RestClient.Make(node.Address).Get().Execute<JsonResultModel<DateTime>>("ping");
+            if (ping == null || !ping.Success)
+                return (false, $"node {node.Name} is not reachable");
 
             _nodes.Add(node.Name, node);
             return (true, string.Empty);

@@ -18,7 +18,7 @@ namespace SHPA.Blockchain.Server.Actions
             if (input != null)
             {
                 _blockchain.AddTransaction(input.Sender, input.Receiver, input.Amount);
-                return new JsonActionResult<Transaction>(input);
+                return new ActionResult<Transaction>().AddResult(input);
             }
             return new NotFoundActionResult();
         }

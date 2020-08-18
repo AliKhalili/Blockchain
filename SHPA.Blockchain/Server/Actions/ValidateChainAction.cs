@@ -20,7 +20,7 @@ namespace SHPA.Blockchain.Server.Actions
             {
                 return new NotFoundActionResult();
             }
-            return new JsonActionResult<bool>(_blockchain.IsValidChain());
+            return new ActionResult<bool>().AddResult(_blockchain.IsValidChain());
         }
     }
 }

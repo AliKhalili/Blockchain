@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Net;
-using Newtonsoft.Json;
-using SHPA.Blockchain.Blocks;
+﻿using System.Net;
 using SHPA.Blockchain.Nodes;
 using SHPA.Blockchain.Server.ActionResult;
 
@@ -21,7 +18,10 @@ namespace SHPA.Blockchain.Server.Actions
             if (request != null)
             {
                 var (result, message) = _nodeManager.RegisterNode(input);
-                return new JsonActionResult<object>(new { result, message });
+                if (!result)
+                    return new ActionResult<object>().AddErrors(new[] { message });
+                return new ActionResult<object>();
+
             }
             return new NotFoundActionResult();
         }

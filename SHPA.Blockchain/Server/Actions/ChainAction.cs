@@ -20,7 +20,7 @@ namespace SHPA.Blockchain.Server.Actions
             {
                 return new NotFoundActionResult();
             }
-            return new JsonActionResult<Block<Transaction>[]>(_blockchain.Chain());
+            return new ActionResult<Block<Transaction>[]>().AddResult(_blockchain.Chain());
         }
     }
 }

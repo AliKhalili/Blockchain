@@ -8,7 +8,7 @@ namespace SHPA.Blockchain.Server.Actions
     {
         public IActionResult Execute(HttpListenerRequest request)
         {
-            return new JsonActionResult<DateTime>(DateTime.Now);
+            return new ActionResult<DateTime>().AddResult(DateTime.Now);
         }
     }
 }
