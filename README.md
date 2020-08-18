@@ -1,2 +1,2 @@
 # Blockchain
-### A simple Blockchain from scratch consist of several important component and concept in Software Engineering such as embedded web server, dependency injection and etc.
+### A simple Blockchain from scratch consist of several important component and concept in Software Engineering such as embedded web server, dependency injection, Object Oriented  Programming ,REST and etc.
