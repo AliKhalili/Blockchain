@@ -10,7 +10,7 @@ namespace SHPA.Blockchain.Client
 {
     public class RestClient
     {
-        private readonly Url _baseUrl;
+        private readonly Uri _baseUrl;
         private readonly Dictionary<string, string> _defaultHeader;
         private readonly int _timeOut;
         private readonly HttpClient _client;
@@ -26,6 +26,7 @@ namespace SHPA.Blockchain.Client
                 {"Accept", "application/json"},
                 {"UserAgent","Rest.Client.Agent"}
             };
+            _baseUrl = baseUrl;
             _timeOut = timeOut;
             _client = new HttpClient();
             AddDefaultHeard();
@@ -38,7 +39,7 @@ namespace SHPA.Blockchain.Client
         {
             foreach (var header in _defaultHeader)
             {
-                _client.DefaultRequestHeaders.Add(header.Key, new[] { header.Value });
+                _client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
             }
         }
 
@@ -99,7 +100,7 @@ namespace SHPA.Blockchain.Client
         {
             if (_method == "GET")
             {
-                HttpResponseMessage response = _client.GetAsync($"{_baseUrl}/{url}{GetQuery()}").Result;
+                HttpResponseMessage response = _client.GetAsync($"{_baseUrl}{url}{GetQuery()}").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     return JsonConvert.DeserializeObject<T>(response.Content.ReadAsStringAsync().Result);

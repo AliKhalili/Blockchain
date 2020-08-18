@@ -1,26 +1,25 @@
-﻿using System.IO;
-using System.Net;
-using Newtonsoft.Json;
+﻿using System.Net;
 using SHPA.Blockchain.Blocks;
+using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
 
-namespace SHPA.Blockchain.Server.Actions
+namespace SHPA.Blockchain.Actions
 {
-    public class ValidateChainAction : IAction
+    public class MineAction : IAction
     {
         private readonly IBlockchain _blockchain;
 
-        public ValidateChainAction(IBlockchain blockchain)
+        public MineAction(IBlockchain blockchain)
         {
             _blockchain = blockchain;
         }
         public IActionResult Execute(HttpListenerRequest request)
         {
-            if (request.HttpMethod != "GET")
+            if (request.HttpMethod != "POST")
             {
                 return new NotFoundActionResult();
             }
-            return new ActionResult<bool>().AddResult(_blockchain.IsValidChain());
+            return new ActionResult<Block<Transaction>>().AddResult(_blockchain.Mine());
         }
     }
 }

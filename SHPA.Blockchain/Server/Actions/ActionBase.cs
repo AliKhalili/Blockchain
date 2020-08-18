@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Net;
 using Newtonsoft.Json;
-using SHPA.Blockchain.Nodes;
-using SHPA.Blockchain.Server.ActionResult;
 
 namespace SHPA.Blockchain.Server.Actions
 {

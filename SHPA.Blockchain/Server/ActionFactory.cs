@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
-using SHPA.Blockchain.Server.Actions;
+using SHPA.Blockchain.Actions;
 
 namespace SHPA.Blockchain.Server
 {

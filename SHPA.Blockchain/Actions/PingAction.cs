@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Net;
+using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
 
-namespace SHPA.Blockchain.Server.Actions
+namespace SHPA.Blockchain.Actions
 {
     public class PingAction : IAction
     {

@@ -1,16 +1,15 @@
-﻿using System.IO;
-using System.Net;
-using Newtonsoft.Json;
+﻿using System.Net;
 using SHPA.Blockchain.Blocks;
+using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
 
-namespace SHPA.Blockchain.Server.Actions
+namespace SHPA.Blockchain.Actions
 {
-    public class ChainAction : IAction
+    public class ValidateChainAction : IAction
     {
         private readonly IBlockchain _blockchain;
 
-        public ChainAction(IBlockchain blockchain)
+        public ValidateChainAction(IBlockchain blockchain)
         {
             _blockchain = blockchain;
         }
@@ -20,7 +19,7 @@ namespace SHPA.Blockchain.Server.Actions
             {
                 return new NotFoundActionResult();
             }
-            return new ActionResult<Block<Transaction>[]>().AddResult(_blockchain.Chain());
+            return new ActionResult<bool>().AddResult(_blockchain.IsValidChain());
         }
     }
 }
