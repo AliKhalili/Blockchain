@@ -17,7 +17,7 @@ namespace SHPA.Blockchain.Actions
         public override IActionResult Execute(HttpListenerRequest request)
         {
             var input = ParseBody<Node>(request);
-            if (request != null)
+            if (input != null)
             {
                 var (result, message) = _nodeManager.RegisterNode(input);
                 if (!result)

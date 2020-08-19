@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Extensions.Options;
+using SHPA.Blockchain.Actions.Models;
 using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.Client;
 using SHPA.Blockchain.Configuration;
@@ -21,25 +22,31 @@ namespace SHPA.Blockchain.Nodes
             _option = option.Value;
             _nodes = new Dictionary<string, Node>();
         }
-
+        public string GetName()
+        {
+            return _option.Name;
+        }
         public void Ping()
         {
             var watch = new Stopwatch();
             foreach (var node in _nodes)
             {
                 watch.Start();
-                var ping = RestClient.Make(node.Value.Address).Get().Execute<JsonResultModel<DateTime>>("ping");
-                var nodeTime = "NAN";
+                var ping = RestClient.Make(node.Value.Address).Get().Execute<JsonResultModel<PingResultModel>>("ping");
+                var elapsedTime = watch.ElapsedMilliseconds;
+                watch.Reset();
                 if (ping != null && ping.Success)
                 {
-                    nodeTime = ping.Result.ToString("s");
+                    Console.WriteLine($"Reply from {node.Key} is success: time={elapsedTime}ms, return_node_name:{ping.Result.NodeName}");
                 }
-
-                var elapsedTime = watch.Elapsed.Milliseconds;
-                Console.WriteLine($"Reply from {node.Key}: time={elapsedTime}ms node_time={nodeTime}");
-                watch.Reset();
+                else
+                {
+                    Console.WriteLine($"Reply from {node.Key} is failed: time={elapsedTime}ms");
+                }
             }
         }
+
+
 
         public (bool Result, string Message) RegisterNode(Node node)
         {
@@ -47,7 +54,7 @@ namespace SHPA.Blockchain.Nodes
                 return (false, "maximum capacity is exceeded");
             if (_nodes.ContainsKey(node.Name))
                 return (false, $"node {node.Name} was registered previously");
-            
+
             var ping = RestClient.Make(node.Address).Get().Execute<JsonResultModel<DateTime>>("ping");
             if (ping == null || !ping.Success)
                 return (false, $"node {node.Name} is not reachable");
