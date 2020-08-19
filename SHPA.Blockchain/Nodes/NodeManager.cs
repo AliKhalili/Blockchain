@@ -60,6 +60,7 @@ namespace SHPA.Blockchain.Nodes
                 return (false, $"node {node.Name} is not reachable");
             if (!ping.Result.NodeName.Equals(node.Name))
                 return (false, $"registered node name {node.Name} is not equal to ping result node name {ping.Result.NodeName}");
+            
             _nodes.Add(node.Name, node);
             return (true, string.Empty);
         }
