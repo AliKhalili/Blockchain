@@ -55,10 +55,11 @@ namespace SHPA.Blockchain.Nodes
             if (_nodes.ContainsKey(node.Name))
                 return (false, $"node {node.Name} was registered previously");
 
-            var ping = RestClient.Make(node.Address).Get().Execute<JsonResultModel<DateTime>>("ping");
+            var ping = RestClient.Make(node.Address).Get().Execute<JsonResultModel<PingResultModel>>("ping");
             if (ping == null || !ping.Success)
                 return (false, $"node {node.Name} is not reachable");
-
+            if (!ping.Result.NodeName.Equals(node.Name))
+                return (false, $"registered node name {node.Name} is not equal to ping result node name {ping.Result.NodeName}");
             _nodes.Add(node.Name, node);
             return (true, string.Empty);
         }
