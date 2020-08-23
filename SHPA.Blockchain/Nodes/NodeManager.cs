@@ -69,5 +69,10 @@ namespace SHPA.Blockchain.Nodes
         {
             return _nodes.Values.ToArray();
         }
+
+        public Block<Transaction> BroadcastNewBlock()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
