@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Options;
+using SHPA.Blockchain.Actions.Models;
 using SHPA.Blockchain.Configuration;
 
 namespace SHPA.Blockchain.Blocks
@@ -47,6 +48,14 @@ namespace SHPA.Blockchain.Blocks
             return IsValidChain(_chain);
         }
 
+        public AddBlockResultModel AddBlock(Block<Transaction> input)
+        {
+            var lastBlock = GetLastBlock();
+            if (lastBlock.Index > input.Index)
+                throw new Exception("");
+            return null;
+        }
+
         private Block<Transaction> GetGenesisBlock()
         {
             return new Block<Transaction>(0, DateTime.UtcNow, new Transaction[0], "genesis_block", _proofOfWork.InitialProof());
@@ -72,7 +81,7 @@ namespace SHPA.Blockchain.Blocks
                     return false;
                 if (!block.Hash.Equals(block.ComputeHash()))
                     return false;
-                
+
                 previousHash = block.Hash;
                 index++;
             }
