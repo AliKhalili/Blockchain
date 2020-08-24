@@ -109,7 +109,7 @@ namespace SHPA.Blockchain.Client
             }
             else if (_method == "POST")
             {
-                HttpResponseMessage response = _client.PostAsync($"{_baseUrl}/{url}{GetQuery()}", GetBody()).Result;
+                HttpResponseMessage response = _client.PostAsync($"{_baseUrl}{url}{GetQuery()}", GetBody()).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     return JsonConvert.DeserializeObject<T>(response.Content.ReadAsStringAsync().Result);

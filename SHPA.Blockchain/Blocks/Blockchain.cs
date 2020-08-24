@@ -14,11 +14,9 @@ namespace SHPA.Blockchain.Blocks
         private readonly IList<Block<Transaction>> _chain;
         private IList<Transaction> _transactions;
         private readonly NodeConfiguration _option;
-        private readonly INodeManager _nodeManager;
-        public Blockchain(IProofOfWork proofOfWork, IOptions<NodeConfiguration> option, INodeManager nodeManager)
+        public Blockchain(IProofOfWork proofOfWork, IOptions<NodeConfiguration> option)
         {
             _proofOfWork = proofOfWork;
-            _nodeManager = nodeManager;
             _chain = new List<Block<Transaction>>
             {
                 GetGenesisBlock()
@@ -39,7 +37,6 @@ namespace SHPA.Blockchain.Blocks
             var proof = _proofOfWork.GetNext(GetLastBlock().ProofOfWork);
             AddTransaction("reward", _option.Name, 1);
             var newBlock = AddBlock(proof);
-            var (result, errors) = _nodeManager.BroadcastNewBlock(newBlock);
             return newBlock;
         }
 
@@ -66,7 +63,7 @@ namespace SHPA.Blockchain.Blocks
 
         private Block<Transaction> GetGenesisBlock()
         {
-            return new Block<Transaction>(0, DateTime.UtcNow, new Transaction[0], "genesis_block", _proofOfWork.InitialProof());
+            return new Block<Transaction>(0, DateTime.MinValue, new Transaction[0], "genesis_block", _proofOfWork.InitialProof());
         }
 
         private bool IsValidChain(IList<Block<Transaction>> chain)

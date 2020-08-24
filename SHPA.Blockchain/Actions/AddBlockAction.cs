@@ -23,6 +23,7 @@ namespace SHPA.Blockchain.Actions
                 var actionResult = new ActionResult<bool>().AddResult(result);
                 if (errors != null)
                     return actionResult.AddErrors(errors);
+                return actionResult;
             }
             return new NotFoundActionResult();
         }

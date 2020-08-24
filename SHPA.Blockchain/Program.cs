@@ -49,6 +49,7 @@ namespace SHPA.Blockchain
             serviceCollection.AddTransient<ValidateChainAction>();
             serviceCollection.AddTransient<RegisterNodeAction>();
             serviceCollection.AddTransient<GetRegisterNodeAction>();
+            serviceCollection.AddTransient<AddBlockAction>();
         }
     }
 }
