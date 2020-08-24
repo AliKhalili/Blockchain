@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using SHPA.Blockchain.Actions.Models;
 using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
@@ -20,8 +19,10 @@ namespace SHPA.Blockchain.Actions
             var input = ParseBody<Block<Transaction>>(request);
             if (input != null)
             {
-                var result = _blockchain.AddBlock(input);
-                return new ActionResult<AddBlockResultModel>().AddResult(result);
+                var (result, errors) = _blockchain.AddBlock(input);
+                var actionResult = new ActionResult<bool>().AddResult(result);
+                if (errors != null)
+                    return actionResult.AddErrors(errors);
             }
             return new NotFoundActionResult();
         }

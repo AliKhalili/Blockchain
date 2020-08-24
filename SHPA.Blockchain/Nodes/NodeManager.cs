@@ -60,7 +60,7 @@ namespace SHPA.Blockchain.Nodes
                 return (false, $"node {node.Name} is not reachable");
             if (!ping.Result.NodeName.Equals(node.Name))
                 return (false, $"registered node name {node.Name} is not equal to ping result node name {ping.Result.NodeName}");
-            
+
             _nodes.Add(node.Name, node);
             return (true, string.Empty);
         }
@@ -70,9 +70,19 @@ namespace SHPA.Blockchain.Nodes
             return _nodes.Values.ToArray();
         }
 
-        public Block<Transaction> BroadcastNewBlock()
+        public (bool Result, string[] errors) BroadcastNewBlock(Block<Transaction> input)
         {
-            throw new NotImplementedException();
+            var errors = new List<string>();
+            foreach (var node in _nodes)
+            {
+                var result = RestClient.Make(node.Value.Address).Post().AddBody(input).Execute<JsonResultModel<bool>>("addblock");
+                if (!result.Success)
+                    errors.AddRange(result.Errors);
+            }
+
+            if (errors.Any())
+                return (false, errors.ToArray());
+            return (true, null);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.Options;
 using SHPA.Blockchain.Actions.Models;
 using SHPA.Blockchain.Configuration;
+using SHPA.Blockchain.Nodes;
 
 namespace SHPA.Blockchain.Blocks
 {
@@ -13,9 +14,11 @@ namespace SHPA.Blockchain.Blocks
         private readonly IList<Block<Transaction>> _chain;
         private IList<Transaction> _transactions;
         private readonly NodeConfiguration _option;
-        public Blockchain(IProofOfWork proofOfWork, IOptions<NodeConfiguration> option)
+        private readonly INodeManager _nodeManager;
+        public Blockchain(IProofOfWork proofOfWork, IOptions<NodeConfiguration> option, INodeManager nodeManager)
         {
             _proofOfWork = proofOfWork;
+            _nodeManager = nodeManager;
             _chain = new List<Block<Transaction>>
             {
                 GetGenesisBlock()
@@ -35,7 +38,9 @@ namespace SHPA.Blockchain.Blocks
         {
             var proof = _proofOfWork.GetNext(GetLastBlock().ProofOfWork);
             AddTransaction("reward", _option.Name, 1);
-            return AddBlock(proof);
+            var newBlock = AddBlock(proof);
+            var (result, errors) = _nodeManager.BroadcastNewBlock(newBlock);
+            return newBlock;
         }
 
         public Block<Transaction>[] Chain()
@@ -48,12 +53,15 @@ namespace SHPA.Blockchain.Blocks
             return IsValidChain(_chain);
         }
 
-        public AddBlockResultModel AddBlock(Block<Transaction> input)
+        public (bool Result, string[] Errors) AddBlock(Block<Transaction> input)
         {
             var lastBlock = GetLastBlock();
             if (lastBlock.Index > input.Index)
-                throw new Exception("");
-            return null;
+                return (false, new[] { "new block index is lower than last block of current node" });
+            if (!lastBlock.Hash.Equals(input.PreviousHash))
+                return (false, new[] { "new previous hash is not equal to last block previous hash of current node" });
+            _chain.Add(input);
+            return (true, null);
         }
 
         private Block<Transaction> GetGenesisBlock()

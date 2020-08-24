@@ -1,5 +1,4 @@
-﻿using SHPA.Blockchain.Actions.Models;
-
+﻿
 namespace SHPA.Blockchain.Blocks
 {
     public interface IBlockchain
@@ -8,6 +7,6 @@ namespace SHPA.Blockchain.Blocks
         Block<Transaction> Mine();
         Block<Transaction>[] Chain();
         bool IsValidChain();
-        AddBlockResultModel AddBlock(Block<Transaction> input);
+        (bool Result, string[] Errors) AddBlock(Block<Transaction> input);
     }
 }
