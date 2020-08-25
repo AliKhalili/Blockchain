@@ -1,12 +1,13 @@
 ﻿using System.Net;
 using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
+using SHPA.Blockchain.Server.Actions;
 
 namespace SHPA.Blockchain.Actions
 {
-    public class NotFoundAction : IAction
+    public class NotFoundAction : ActionBase
     {
-        public IActionResult Execute(HttpListenerRequest request)
+        public override IActionResult Execute(HttpListenerRequest request)
         {
             return new NotFoundActionResult();
         }

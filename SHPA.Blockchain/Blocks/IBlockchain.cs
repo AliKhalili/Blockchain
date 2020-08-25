@@ -7,6 +7,6 @@ namespace SHPA.Blockchain.Blocks
         Block<Transaction> Mine();
         Block<Transaction>[] Chain();
         bool IsValidChain();
-        (bool Result, string[] Errors) AddBlock(Block<Transaction> input);
+        (bool Result, string Error) AddBlock(Block<Transaction> input);
     }
 }

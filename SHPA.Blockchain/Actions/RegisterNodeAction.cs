@@ -8,21 +8,22 @@ namespace SHPA.Blockchain.Actions
 {
     public class RegisterNodeAction : ActionBase
     {
-        private readonly INodeManager _nodeManager;
+        private readonly IEngine _engine;
 
-        public RegisterNodeAction(INodeManager nodeManager)
+        public RegisterNodeAction(IEngine engine)
         {
-            _nodeManager = nodeManager;
+            _engine = engine;
         }
         public override IActionResult Execute(HttpListenerRequest request)
         {
             var input = ParseBody<Node>(request);
             if (input != null)
             {
-                var (result, message) = _nodeManager.RegisterNode(input);
+                var enableRegisterBack = ParseQuery<bool>(request, "enableRegisterBack");
+                var (result, message) = _engine.RegisterNode(input, enableRegisterBack);
                 if (!result)
-                    return new ActionResult<object>().AddErrors(new[] { message });
-                return new ActionResult<object>();
+                    return new ActionResult<bool>().AddErrors(new[] { message });
+                return new ActionResult<bool>();
 
             }
             return new NotFoundActionResult();

@@ -1,24 +1,21 @@
-﻿using System;
-using System.Net;
-using SHPA.Blockchain.Actions.Models;
-using SHPA.Blockchain.Blocks;
-using SHPA.Blockchain.Configuration;
+﻿using System.Net;
 using SHPA.Blockchain.Nodes;
 using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
+using SHPA.Blockchain.Server.Actions;
 
 namespace SHPA.Blockchain.Actions
 {
-    public class GetRegisterNodeAction : IAction
+    public class GetRegisterNodeAction : ActionBase
     {
-        private readonly INodeManager _nodeManager;
-        public GetRegisterNodeAction(INodeManager nodeManager)
+        private readonly IEngine _engine;
+        public GetRegisterNodeAction(IEngine engine)
         {
-            _nodeManager = nodeManager;
+            _engine = engine;
         }
-        public IActionResult Execute(HttpListenerRequest request)
+        public override IActionResult Execute(HttpListenerRequest request)
         {
-            return new ActionResult<Node[]>().AddResult(_nodeManager.GetRegisterNodes());
+            return new ActionResult<Node[]>().AddResult(_engine.GetRegisterNodes());
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using Newtonsoft.Json;
 
@@ -11,6 +13,17 @@ namespace SHPA.Blockchain.Server.Actions
             throw new System.NotImplementedException();
         }
 
+        public string GetRout()
+        {
+            return GetType().Name.Substring(0, (int)GetType().Name?.LastIndexOf("Action"));
+        }
+
+        protected T ParseQuery<T>(HttpListenerRequest request, string key)
+        {
+            if (!request.QueryString.HasKeys())
+                return default;
+            return (T)Convert.ChangeType(request.QueryString[key], typeof(T));
+        }
         protected T ParseBody<T>(HttpListenerRequest request) where T : class
         {
             if (!request.HasEntityBody || request.HttpMethod != "POST")

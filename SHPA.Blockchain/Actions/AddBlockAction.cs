@@ -8,21 +8,21 @@ namespace SHPA.Blockchain.Actions
 {
     public class AddBlockAction : ActionBase
     {
-        private readonly IBlockchain _blockchain;
+        private readonly IEngine _engine;
 
-        public AddBlockAction(IBlockchain blockchain)
+        public AddBlockAction(IEngine engine)
         {
-            _blockchain = blockchain;
+            _engine = engine;
         }
         public override IActionResult Execute(HttpListenerRequest request)
         {
             var input = ParseBody<Block<Transaction>>(request);
             if (input != null)
             {
-                var (result, errors) = _blockchain.AddBlock(input);
+                var (result, error) = _engine.AddBlock(input);
                 var actionResult = new ActionResult<bool>().AddResult(result);
-                if (errors != null)
-                    return actionResult.AddErrors(errors);
+                if (error != null)
+                    return actionResult.AddErrors(new[] { error });
                 return actionResult;
             }
             return new NotFoundActionResult();

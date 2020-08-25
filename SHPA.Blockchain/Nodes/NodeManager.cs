@@ -13,19 +13,17 @@ namespace SHPA.Blockchain.Nodes
 {
     public class NodeManager : INodeManager
     {
-        private IBlockchain _blockchain;
         private readonly NodeConfiguration _option;
         private readonly Dictionary<string, Node> _nodes;
-        public NodeManager(IBlockchain blockchain, IOptions<NodeConfiguration> option)
+        private Node _node;
+
+        public NodeManager(IOptions<NodeConfiguration> option)
         {
-            _blockchain = blockchain;
             _option = option.Value;
             _nodes = new Dictionary<string, Node>();
+            _node = new Node(new Uri(_option.GetFullAddress()), _option.Name);
         }
-        public string GetName()
-        {
-            return _option.Name;
-        }
+
         public void Ping()
         {
             var watch = new Stopwatch();
@@ -69,6 +67,8 @@ namespace SHPA.Blockchain.Nodes
         {
             return _nodes.Values.ToArray();
         }
+
+        public Node Node() => _node;
 
         public (bool Result, string[] errors) BroadcastNewBlock(Block<Transaction> input)
         {

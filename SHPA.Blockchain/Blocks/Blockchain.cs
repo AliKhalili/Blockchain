@@ -50,13 +50,13 @@ namespace SHPA.Blockchain.Blocks
             return IsValidChain(_chain);
         }
 
-        public (bool Result, string[] Errors) AddBlock(Block<Transaction> input)
+        public (bool Result, string Error) AddBlock(Block<Transaction> input)
         {
             var lastBlock = GetLastBlock();
             if (lastBlock.Index > input.Index)
-                return (false, new[] { "new block index is lower than last block of current node" });
+                return (false, "new block index is lower than last block of current node");
             if (!lastBlock.Hash.Equals(input.PreviousHash))
-                return (false, new[] { "new previous hash is not equal to last block previous hash of current node" });
+                return (false,  "new previous hash is not equal to last block previous hash of current node");
             _chain.Add(input);
             return (true, null);
         }

@@ -2,24 +2,25 @@
 using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
+using SHPA.Blockchain.Server.Actions;
 
 namespace SHPA.Blockchain.Actions
 {
-    public class ChainAction : IAction
+    public class ChainAction : ActionBase
     {
-        private readonly IBlockchain _blockchain;
+        private readonly IEngine _engine;
 
-        public ChainAction(IBlockchain blockchain)
+        public ChainAction(IEngine engine)
         {
-            _blockchain = blockchain;
+            _engine = engine;
         }
-        public IActionResult Execute(HttpListenerRequest request)
+        public override IActionResult Execute(HttpListenerRequest request)
         {
             if (request.HttpMethod != "GET")
             {
                 return new NotFoundActionResult();
             }
-            return new ActionResult<Block<Transaction>[]>().AddResult(_blockchain.Chain());
+            return new ActionResult<Block<Transaction>[]>().AddResult(_engine.GetChain());
         }
     }
 }

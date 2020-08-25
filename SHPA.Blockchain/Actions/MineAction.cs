@@ -1,33 +1,29 @@
 ﻿using System.Net;
 using SHPA.Blockchain.Blocks;
-using SHPA.Blockchain.Nodes;
 using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
+using SHPA.Blockchain.Server.Actions;
 
 namespace SHPA.Blockchain.Actions
 {
-    public class MineAction : IAction
+    public class MineAction : ActionBase
     {
-        private readonly IBlockchain _blockchain;
-        private readonly INodeManager _nodeManager;
-
-        public MineAction(IBlockchain blockchain, INodeManager nodeManager)
+        private readonly IEngine _engine;
+        public MineAction(IEngine engine)
         {
-            _blockchain = blockchain;
-            _nodeManager = nodeManager;
+            _engine = engine;
         }
-        public IActionResult Execute(HttpListenerRequest request)
+        public override IActionResult Execute(HttpListenerRequest request)
         {
             if (request.HttpMethod != "POST")
             {
                 return new NotFoundActionResult();
             }
 
-            var newBlock = _blockchain.Mine();
-            var (result, errors) = _nodeManager.BroadcastNewBlock(newBlock);
+            var (result, error, newBlock) = _engine.Mine();
             if (result)
                 return new ActionResult<Block<Transaction>>().AddResult(newBlock);
-            return new ActionResult<Block<Transaction>>().AddErrors(errors);
+            return new ActionResult<Block<Transaction>>().AddErrors(new[] { error });
         }
     }
 }

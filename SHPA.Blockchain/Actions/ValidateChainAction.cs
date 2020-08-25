@@ -2,10 +2,11 @@
 using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
+using SHPA.Blockchain.Server.Actions;
 
 namespace SHPA.Blockchain.Actions
 {
-    public class ValidateChainAction : IAction
+    public class ValidateChainAction : ActionBase
     {
         private readonly IBlockchain _blockchain;
 
@@ -13,7 +14,7 @@ namespace SHPA.Blockchain.Actions
         {
             _blockchain = blockchain;
         }
-        public IActionResult Execute(HttpListenerRequest request)
+        public override IActionResult Execute(HttpListenerRequest request)
         {
             if (request.HttpMethod != "GET")
             {

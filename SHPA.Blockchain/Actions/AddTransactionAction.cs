@@ -8,18 +8,17 @@ namespace SHPA.Blockchain.Actions
 {
     public class AddTransactionAction : ActionBase
     {
-        private readonly IBlockchain _blockchain;
-
-        public AddTransactionAction(IBlockchain blockchain)
+        private readonly IEngine _engine;
+        public AddTransactionAction(IEngine engine)
         {
-            _blockchain = blockchain;
+            _engine = engine;
         }
         public override IActionResult Execute(HttpListenerRequest request)
         {
             var input = ParseBody<Transaction>(request);
             if (input != null)
             {
-                _blockchain.AddTransaction(input.Sender, input.Receiver, input.Amount);
+                _engine.AddTransaction(input);
                 return new ActionResult<Transaction>().AddResult(input);
             }
             return new NotFoundActionResult();
