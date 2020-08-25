@@ -11,16 +11,13 @@ namespace SHPA.Blockchain
     public class Application
     {
         private readonly IServer _server;
-        private readonly IBlockchain _blockchain;
-        private readonly INodeManager _nodeManager;
-
+        private readonly IEngine _engine;
         private readonly Dictionary<string, (string Help, Func<string, CancellationTokenSource, Dictionary<string, string>, bool> Func)> _commands;
 
-        public Application(IServer server, IBlockchain blockchain, INodeManager nodeManager)
+        public Application(IServer server, IEngine engine)
         {
             _server = server;
-            _blockchain = blockchain;
-            _nodeManager = nodeManager;
+            _engine = engine;
             _commands = new Dictionary<string, (string Help, Func<string, CancellationTokenSource, Dictionary<string, string>, bool> Func)>
             {
                 {"quit", ("in order to quit and close application completely",QuitCommand)},
@@ -92,15 +89,14 @@ namespace SHPA.Blockchain
         }
         private bool MineCommand(string command, CancellationTokenSource cancellationToken, Dictionary<string, string> args)
         {
-            var newBlock = _blockchain.Mine();
-            var (result, errors) = _nodeManager.BroadcastNewBlock(newBlock);
+            var (result, error, newBlock) = _engine.Mine();
             Console.WriteLine($"mine complete, block_id :{newBlock.Index}, proof :{newBlock.ProofOfWork}, datetime :{newBlock.Time:s}, pre_hash:{newBlock.PreviousHash}, hash :{newBlock.Hash}");
             return true;
         }
         private bool RegisterNewNodeCommand(string command, CancellationTokenSource cancellationToken, Dictionary<string, string> args)
         {
-            var result = _nodeManager.RegisterNode(new Node(new Uri(args["-u"]), args["-n"]));
-            Console.WriteLine($"new node register status: {(result.Result ? "success" : "failed")}");
+            var (result, error) = _engine.RegisterNode(new Node(new Uri(args["-u"]), args["-n"]));
+            Console.WriteLine($"new node register status: {(result ? "success" : "failed")}");
             return true;
         }
     }
