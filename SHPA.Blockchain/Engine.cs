@@ -1,4 +1,5 @@
-﻿using SHPA.Blockchain.Blocks;
+﻿using System.Collections.Generic;
+using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.Client;
 using SHPA.Blockchain.Nodes;
 using SHPA.Blockchain.Server.ActionResult;
@@ -14,6 +15,7 @@ namespace SHPA.Blockchain
         (bool, string) AddBlock(Block<Transaction> newBlock);
         void AddTransaction(Transaction newTransaction);
         (bool, string, Block<Transaction>) Mine();
+        bool IsValidChain();
     }
     public class Engine : IEngine
     {
@@ -66,6 +68,11 @@ namespace SHPA.Blockchain
             var newBlock = _blockchain.Mine();
             var (result, errors) = _nodeManager.BroadcastNewBlock(newBlock);
             return (true, string.Empty, newBlock);
+        }
+
+        public bool IsValidChain()
+        {
+            return _blockchain.IsValidChain();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
 using SHPA.Blockchain.Server.Actions;
@@ -8,11 +7,10 @@ namespace SHPA.Blockchain.Actions
 {
     public class ValidateChainAction : ActionBase
     {
-        private readonly IBlockchain _blockchain;
-
-        public ValidateChainAction(IBlockchain blockchain)
+        private readonly IEngine _engine;
+        public ValidateChainAction(IEngine engine)
         {
-            _blockchain = blockchain;
+            _engine = engine;
         }
         public override IActionResult Execute(HttpListenerRequest request)
         {
@@ -20,7 +18,7 @@ namespace SHPA.Blockchain.Actions
             {
                 return new NotFoundActionResult();
             }
-            return new ActionResult<bool>().AddResult(_blockchain.IsValidChain());
+            return new ActionResult<bool>().AddResult(_engine.IsValidChain());
         }
     }
 }
