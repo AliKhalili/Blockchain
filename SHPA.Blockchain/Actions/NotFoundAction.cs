@@ -1,7 +1,7 @@
-﻿using System.Net;
-using SHPA.Blockchain.Server;
+﻿using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
 using SHPA.Blockchain.Server.Actions;
+using System.Net;
 
 namespace SHPA.Blockchain.Actions
 {

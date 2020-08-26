@@ -1,10 +1,9 @@
-﻿using System;
+﻿using SHPA.Blockchain.Nodes;
+using SHPA.Blockchain.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using SHPA.Blockchain.Blocks;
-using SHPA.Blockchain.Nodes;
-using SHPA.Blockchain.Server;
 
 namespace SHPA.Blockchain
 {

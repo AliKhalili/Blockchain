@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace SHPA.Blockchain.Configuration
+﻿namespace SHPA.Blockchain.Configuration
 {
     /// <summary>
     /// A class for loading node configuration from json file

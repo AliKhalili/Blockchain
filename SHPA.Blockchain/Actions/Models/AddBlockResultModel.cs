@@ -2,6 +2,6 @@
 {
     public class AddBlockResultModel
     {
-        public bool B { get; set; } 
+        public bool B { get; set; }
     }
 }

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using SHPA.Blockchain.Actions.Models;
 using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.Client;
 using SHPA.Blockchain.Configuration;
 using SHPA.Blockchain.Server.ActionResult;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace SHPA.Blockchain.Nodes
 {

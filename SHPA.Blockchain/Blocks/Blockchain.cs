@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using SHPA.Blockchain.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Options;
-using SHPA.Blockchain.Actions.Models;
-using SHPA.Blockchain.Configuration;
-using SHPA.Blockchain.Nodes;
 
 namespace SHPA.Blockchain.Blocks
 {
@@ -56,7 +54,7 @@ namespace SHPA.Blockchain.Blocks
             if (lastBlock.Index > input.Index)
                 return (false, "new block index is lower than last block of current node");
             if (!lastBlock.Hash.Equals(input.PreviousHash))
-                return (false,  "new previous hash is not equal to last block previous hash of current node");
+                return (false, "new previous hash is not equal to last block previous hash of current node");
             _chain.Add(input);
             return (true, null);
         }

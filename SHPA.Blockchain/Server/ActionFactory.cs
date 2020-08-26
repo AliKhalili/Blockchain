@@ -1,9 +1,8 @@
-﻿using System;
+﻿using SHPA.Blockchain.Actions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Microsoft.Extensions.DependencyInjection;
-using SHPA.Blockchain.Actions;
 
 namespace SHPA.Blockchain.Server
 {

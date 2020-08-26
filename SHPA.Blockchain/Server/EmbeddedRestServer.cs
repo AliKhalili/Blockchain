@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using SHPA.Blockchain.Configuration;
+using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using SHPA.Blockchain.Configuration;
 
 namespace SHPA.Blockchain.Server
 {

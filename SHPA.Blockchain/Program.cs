@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SHPA.Blockchain.Actions;
 using SHPA.Blockchain.Blocks;
@@ -9,6 +6,9 @@ using SHPA.Blockchain.Client;
 using SHPA.Blockchain.Configuration;
 using SHPA.Blockchain.Nodes;
 using SHPA.Blockchain.Server;
+using System;
+using System.IO;
+using System.Threading;
 
 namespace SHPA.Blockchain
 {

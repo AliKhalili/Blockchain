@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace SHPA.Blockchain.Blocks
+﻿namespace SHPA.Blockchain.Blocks
 {
     public class DefaultProofOfWork : IProofOfWork
     {

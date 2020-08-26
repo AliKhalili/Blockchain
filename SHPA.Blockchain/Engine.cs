@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using SHPA.Blockchain.Blocks;
+﻿using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.Client;
 using SHPA.Blockchain.Nodes;
 using SHPA.Blockchain.Server.ActionResult;
