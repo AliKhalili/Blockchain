@@ -80,7 +80,6 @@ namespace SHPA.Blockchain
 
             return true;
         }
-
         private bool QuitCommand(string command, CancellationTokenSource cancellationToken, Dictionary<string, string> args)
         {
             cancellationToken.Cancel();
