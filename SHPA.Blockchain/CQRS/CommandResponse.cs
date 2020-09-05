@@ -2,6 +2,13 @@
 
 namespace SHPA.Blockchain.CQRS
 {
+    public class DefaultCommandResponse : CommandResponse
+    {
+        public DefaultCommandResponse(Guid commandId) : base(commandId)
+        {
+        }
+    }
+
     public abstract class CommandResponse : ICommandResponse
     {
         private readonly Guid _id;

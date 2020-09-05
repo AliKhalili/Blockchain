@@ -25,7 +25,7 @@ namespace SHPA.Blockchain.CQRS
     public interface ICommandHandler<in TCommand, out TCommandResponse> where TCommand : ICommand<TCommandResponse>
         where TCommandResponse : ICommandResponse
     {
-        Task<ICommandResponse> Handle(ICommand<ICommandResponse> command, CancellationToken cancellationToken);
+        Task<ICommandResponse> Handle(TCommand command, CancellationToken cancellationToken);
     }
 
 
