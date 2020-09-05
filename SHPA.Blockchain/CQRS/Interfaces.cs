@@ -4,7 +4,11 @@ using System.Threading.Tasks;
 
 namespace SHPA.Blockchain.CQRS
 {
-    public interface ICommand<TResponse> where TResponse : ICommandResponse
+    public interface IMessage
+    {
+
+    }
+    public interface ICommand<TResponse>:IMessage where TResponse : ICommandResponse
     {
         string GetType();
         Guid GetId();
@@ -22,5 +26,12 @@ namespace SHPA.Blockchain.CQRS
         where TCommandResponse : ICommandResponse
     {
         Task<ICommandResponse> Handle(ICommand<ICommandResponse> command, CancellationToken cancellationToken);
+    }
+
+
+    public interface IMediatorHandler
+    {
+        Task<ICommandResponse> Send(ICommand<ICommandResponse> command);
+        Task Publish(IMessage message);
     }
 }
