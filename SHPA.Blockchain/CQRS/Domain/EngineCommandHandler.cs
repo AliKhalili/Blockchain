@@ -18,6 +18,10 @@ namespace SHPA.Blockchain.CQRS.Domain
             var (result, error) = _engine.AddBlock(command.NewBlock);
             return new DefaultCommandResponse(command.GetId());
         }
-        
+        public async Task<ICommandResponse> Handle(AddTransactionCommand command, CancellationToken cancellationToken)
+        {
+            _engine.AddTransaction(command.Transaction);
+            return new DefaultCommandResponse(command.GetId());
+        }
     }
 }
