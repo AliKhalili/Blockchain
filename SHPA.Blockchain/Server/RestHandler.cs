@@ -2,6 +2,7 @@
 using System;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SHPA.Blockchain.Server
@@ -21,7 +22,7 @@ namespace SHPA.Blockchain.Server
             IActionResult result;
             try
             {
-                result =await _actionFactory.Create(request).Execute(request);
+                result = await _actionFactory.Create(request).Execute(request);
             }
             catch (Exception e)
             {

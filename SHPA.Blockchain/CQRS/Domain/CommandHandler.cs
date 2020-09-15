@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using SHPA.Blockchain.CQRS.Domain.Commands;
 
 namespace SHPA.Blockchain.CQRS.Domain
@@ -13,12 +12,12 @@ namespace SHPA.Blockchain.CQRS.Domain
             this._engine = engine;
         }
 
-        public async Task<DefaultResponse> Handle(AddBlockCommand command, CancellationToken cancellationToken)
+        public async Task<DefaultResponse> Handle(AddBlockCommand command)
         {
             var (result, error) = _engine.AddBlock(command.NewBlock);
             return new DefaultResponse(command.GetId());
         }
-        public async Task<IResponse> Handle(AddTransactionCommand command, CancellationToken cancellationToken)
+        public async Task<IResponse> Handle(AddTransactionCommand command)
         {
             _engine.AddTransaction(command.Transaction);
             return new DefaultResponse(command.GetId());

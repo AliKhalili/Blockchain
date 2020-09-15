@@ -28,7 +28,7 @@ namespace SHPA.Blockchain.CQRS
         where TCommand : ICommand
         where TResponse : IResponse
     {
-        Task<TResponse> Handle(TCommand command, CancellationToken cancellationToken);
+        Task<TResponse> Handle(TCommand command);
     }
 
 

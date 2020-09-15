@@ -1,12 +1,10 @@
-﻿using SHPA.Blockchain.Actions.Models;
-using SHPA.Blockchain.Nodes;
-using SHPA.Blockchain.Server;
-using SHPA.Blockchain.Server.ActionResult;
-using SHPA.Blockchain.Server.Actions;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
+using SHPA.Blockchain.Actions.Models;
+using SHPA.Blockchain.Nodes;
+using SHPA.Blockchain.Server.ActionResult;
 
-namespace SHPA.Blockchain.Actions
+namespace SHPA.Blockchain.Server.Actions.Custom
 {
     public class PingAction : ActionBase
     {

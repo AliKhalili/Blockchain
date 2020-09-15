@@ -1,21 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace SHPA.Blockchain.CQRS
 {
     public class InMemoryBus : IMediatorHandler
     {
-        private readonly CancellationToken _cancellationToken;
         private readonly Dictionary<string, ICommandHandler<ICommand, IResponse>> _handler;
 
-        public InMemoryBus(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        public InMemoryBus(IServiceProvider serviceProvider)
         {
             _handler = new Dictionary<string, ICommandHandler<ICommand, IResponse>>();
-            _cancellationToken = cancellationToken;
-            var type = typeof(ICommandHandler<ICommand, IResponse>);
+            var type = typeof(ICommandHandler<,>);
+            var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).ToArray();
+            foreach (var p in types)
+            {
+                if (p.Name == "CommandHandler")
+                {
+                    Console.WriteLine(p.Name);
+                    var interfaces = p.GetInterfaces();
+                    if (type.IsAssignableFrom(p))
+                    {
+
+                    }
+                }
+            }
             var findHandlers = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => type.IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
@@ -30,7 +40,7 @@ namespace SHPA.Blockchain.CQRS
             var requestType = command.GetType();
             if (_handler.ContainsKey(requestType))
             {
-                return _handler[requestType].Handle(command, _cancellationToken);
+                return _handler[requestType].Handle(command);
             }
             throw new NotImplementedException();
         }

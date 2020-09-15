@@ -1,11 +1,9 @@
-﻿using SHPA.Blockchain.Blocks;
-using SHPA.Blockchain.Server;
-using SHPA.Blockchain.Server.ActionResult;
-using SHPA.Blockchain.Server.Actions;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
+using SHPA.Blockchain.Blocks;
+using SHPA.Blockchain.Server.ActionResult;
 
-namespace SHPA.Blockchain.Actions
+namespace SHPA.Blockchain.Server.Actions.Custom
 {
     public class ChainAction : ActionBase
     {
