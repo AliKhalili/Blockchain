@@ -2,12 +2,13 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace SHPA.Blockchain.Server.Actions
 {
     public abstract class ActionBase : IAction
     {
-        public virtual IActionResult Execute(HttpListenerRequest request)
+        public virtual Task<IActionResult> Execute(HttpListenerRequest request)
         {
             throw new System.NotImplementedException();
         }

@@ -1,10 +1,11 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
 
 namespace SHPA.Blockchain.Server
 {
     public interface IAction
     {
-        IActionResult Execute(HttpListenerRequest request);
+        Task<IActionResult> Execute(HttpListenerRequest request);
         string GetRout();
     }
 }

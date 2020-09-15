@@ -2,7 +2,7 @@
 
 namespace SHPA.Blockchain.CQRS
 {
-    public abstract class Command : ICommand<CommandResponse>
+    public abstract class Command : ICommand
     {
         private readonly string _type;
         private readonly Guid _id;

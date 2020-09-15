@@ -1,25 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SHPA.Blockchain.CQRS
 {
-    public class DefaultCommandResponse : CommandResponse
+    public class DefaultResponse : Response
     {
-        public DefaultCommandResponse(Guid commandId) : base(commandId)
+        public DefaultResponse(Guid commandId) : base(commandId)
         {
         }
     }
 
-    public abstract class CommandResponse : ICommandResponse
+    public abstract class Response : IResponse
     {
         private readonly Guid _id;
         private readonly Guid _commandId;
         private readonly DateTime _time;
-
-        public CommandResponse(Guid commandId)
+        private readonly Dictionary<string, string> _validation;
+        public Response(Guid commandId)
         {
             _id = Guid.NewGuid();
             _commandId = commandId;
             _time = DateTime.UtcNow;
+            _validation = new Dictionary<string, string>();
         }
 
         public Guid GetCommandId()
@@ -35,6 +38,16 @@ namespace SHPA.Blockchain.CQRS
         public DateTime GetTimespan()
         {
             return _time;
+        }
+
+        public bool IsSuccess()
+        {
+            return !_validation.Any();
+        }
+
+        public string[] Errors()
+        {
+            return _validation.Values.ToArray();
         }
     }
 }

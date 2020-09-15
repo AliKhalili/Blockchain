@@ -21,7 +21,7 @@ namespace SHPA.Blockchain.Server
             IActionResult result;
             try
             {
-                result = _actionFactory.Create(request).Execute(request);
+                result =await _actionFactory.Create(request).Execute(request);
             }
             catch (Exception e)
             {

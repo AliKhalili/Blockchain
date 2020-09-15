@@ -3,6 +3,7 @@ using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
 using SHPA.Blockchain.Server.Actions;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace SHPA.Blockchain.Actions
 {
@@ -13,7 +14,7 @@ namespace SHPA.Blockchain.Actions
         {
             _engine = engine;
         }
-        public override IActionResult Execute(HttpListenerRequest request)
+        public override async Task<IActionResult> Execute(HttpListenerRequest request)
         {
             return new ActionResult<Node[]>().AddResult(_engine.GetRegisterNodes());
         }

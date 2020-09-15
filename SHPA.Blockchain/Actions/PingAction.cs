@@ -4,6 +4,7 @@ using SHPA.Blockchain.Server;
 using SHPA.Blockchain.Server.ActionResult;
 using SHPA.Blockchain.Server.Actions;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace SHPA.Blockchain.Actions
 {
@@ -14,7 +15,7 @@ namespace SHPA.Blockchain.Actions
         {
             _nodeManager = nodeManager;
         }
-        public override IActionResult Execute(HttpListenerRequest request)
+        public override async Task<IActionResult> Execute(HttpListenerRequest request)
         {
             return new ActionResult<PingResultModel>().AddResult(new PingResultModel { NodeName = _nodeManager.Node().Name });
         }

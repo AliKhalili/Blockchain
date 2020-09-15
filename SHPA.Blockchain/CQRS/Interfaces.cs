@@ -8,30 +8,33 @@ namespace SHPA.Blockchain.CQRS
     {
 
     }
-    public interface ICommand<TResponse>:IMessage where TResponse : ICommandResponse
+    public interface ICommand : IMessage
     {
         string GetType();
         Guid GetId();
         DateTime GetTimespan();
     }
 
-    public interface ICommandResponse
+    public interface IResponse
     {
         Guid GetCommandId();
         Guid GetId();
         DateTime GetTimespan();
+        bool IsSuccess();
+        string[] Errors();
     }
 
-    public interface ICommandHandler<in TCommand, out TCommandResponse> where TCommand : ICommand<TCommandResponse>
-        where TCommandResponse : ICommandResponse
+    public interface ICommandHandler<in TCommand, TResponse>
+        where TCommand : ICommand
+        where TResponse : IResponse
     {
-        Task<ICommandResponse> Handle(TCommand command, CancellationToken cancellationToken);
+        Task<TResponse> Handle(TCommand command, CancellationToken cancellationToken);
     }
 
 
     public interface IMediatorHandler
     {
-        Task<ICommandResponse> Send(ICommand<ICommandResponse> command);
+        Task<IResponse> Send(ICommand command);
         Task Publish(IMessage message);
     }
 }

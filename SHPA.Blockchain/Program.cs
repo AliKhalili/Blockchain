@@ -9,6 +9,7 @@ using SHPA.Blockchain.Server;
 using System;
 using System.IO;
 using System.Threading;
+using SHPA.Blockchain.CQRS;
 
 namespace SHPA.Blockchain
 {
@@ -36,6 +37,7 @@ namespace SHPA.Blockchain
 
             serviceCollection.AddTransient<Application>();
             serviceCollection.AddSingleton<IEngine, Engine>();
+            serviceCollection.AddSingleton<IMediatorHandler, InMemoryBus>();
             serviceCollection.AddTransient<IBlockchain, Blocks.Blockchain>();
             serviceCollection.AddTransient<INodeManager, NodeManager>();
             serviceCollection.AddTransient<IServer, EmbeddedRestServer>();
