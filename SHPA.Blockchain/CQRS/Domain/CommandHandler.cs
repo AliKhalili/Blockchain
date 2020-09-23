@@ -3,7 +3,9 @@ using SHPA.Blockchain.CQRS.Domain.Commands;
 
 namespace SHPA.Blockchain.CQRS.Domain
 {
-    public class CommandHandler : ICommandHandler<AddBlockCommand, DefaultResponse>
+    public class CommandHandler : 
+        ICommandHandler<AddBlockCommand, DefaultResponse>,
+        ICommandHandler<AddTransactionCommand, DefaultResponse>
     {
         private readonly IEngine _engine;
 
@@ -17,7 +19,7 @@ namespace SHPA.Blockchain.CQRS.Domain
             var (result, error) = _engine.AddBlock(command.NewBlock);
             return new DefaultResponse(command.GetId());
         }
-        public async Task<IResponse> Handle(AddTransactionCommand command)
+        public async Task<DefaultResponse> Handle(AddTransactionCommand command)
         {
             _engine.AddTransaction(command.Transaction);
             return new DefaultResponse(command.GetId());

@@ -10,6 +10,8 @@ using System;
 using System.IO;
 using System.Threading;
 using SHPA.Blockchain.CQRS;
+using SHPA.Blockchain.CQRS.Domain;
+using SHPA.Blockchain.CQRS.Domain.Commands;
 using SHPA.Blockchain.Server.Actions.Custom;
 
 namespace SHPA.Blockchain
@@ -54,6 +56,7 @@ namespace SHPA.Blockchain
             serviceCollection.AddTransient<RegisterNodeAction>();
             serviceCollection.AddTransient<GetRegisterNodeAction>();
             serviceCollection.AddTransient<AddBlockAction>();
+            serviceCollection.AddTransient<ICommandHandler<AddBlockCommand, DefaultResponse>, CommandHandler>();
         }
     }
 }

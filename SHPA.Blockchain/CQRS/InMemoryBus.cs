@@ -1,47 +1,46 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace SHPA.Blockchain.CQRS
 {
     public class InMemoryBus : IMediatorHandler
     {
         private readonly Dictionary<string, ICommandHandler<ICommand, IResponse>> _handler;
+        private readonly IServiceProvider _serviceProvider;
 
         public InMemoryBus(IServiceProvider serviceProvider)
         {
             _handler = new Dictionary<string, ICommandHandler<ICommand, IResponse>>();
             var type = typeof(ICommandHandler<,>);
-            var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).ToArray();
-            foreach (var p in types)
+            foreach (var innerType in AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()))
             {
-                if (p.Name == "CommandHandler")
+                foreach (var singleHandler in innerType.GetInterfaces().Where(x=>x.IsGenericType).Select(x=>x.GetGenericTypeDefinition()))
                 {
-                    Console.WriteLine(p.Name);
-                    var interfaces = p.GetInterfaces();
-                    if (type.IsAssignableFrom(p))
-                    {
-
-                    }
+                    if(singleHandler == type && !string.IsNullOrEmpty(singleHandler.Name))
+                        _handler.Add(singleHandler.Name, (ICommandHandler<ICommand, IResponse>)serviceProvider.GetService(singleHandler));
                 }
-            }
-            var findHandlers = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
-                .Where(p => type.IsAssignableFrom(p) && !p.IsAbstract && !p.IsInterface).ToList();
-            foreach (var commandHandler in findHandlers)
-            {
-                _handler.Add(commandHandler.Name, (ICommandHandler<ICommand, IResponse>)serviceProvider.GetService(commandHandler));
             }
         }
 
         public Task<IResponse> Send(ICommand command)
         {
             var requestType = command.GetType();
-            if (_handler.ContainsKey(requestType))
-            {
-                return _handler[requestType].Handle(command);
-            }
+
+            //var handler = (ICommandHandler<ICommand, IResponse>)_requestHandlers.GetOrAdd(requestType.ToString(),
+            //    t => Activator.CreateInstance(requestType));
+
+            //var handler = (ICommandHandler<ICommand, IResponse>)_requestHandlers.GetOrAdd(requestType.ToString(),
+            //    _serviceProvider.GetService(ICommandHandler<,>);
+
+            //return handler.Handle(command);
+            //if (_handler.ContainsKey(requestType))
+            //{
+            //    return _handler[requestType].Handle(command);
+            //}
             throw new NotImplementedException();
         }
 

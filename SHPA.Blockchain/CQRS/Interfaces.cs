@@ -10,7 +10,7 @@ namespace SHPA.Blockchain.CQRS
     }
     public interface ICommand : IMessage
     {
-        string GetType();
+        Type GetType();
         Guid GetId();
         DateTime GetTimespan();
     }
