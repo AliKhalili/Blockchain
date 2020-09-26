@@ -3,8 +3,9 @@ using SHPA.Blockchain.CQRS.Domain.Commands;
 
 namespace SHPA.Blockchain.CQRS.Domain
 {
-    public class RequestHandler : 
-        IRequestHandler<AddBlockCommand,DefaultResponse>,
+    public class RequestHandler :
+        IRequestHandler<AddBlockCommand, DefaultResponse>
+        ,
         IRequestHandler<AddTransactionCommand,DefaultResponse>
     {
         private readonly IEngine _engine;
@@ -24,5 +25,8 @@ namespace SHPA.Blockchain.CQRS.Domain
             _engine.AddTransaction(command.Transaction);
             return new DefaultResponse();
         }
+
+
+
     }
 }

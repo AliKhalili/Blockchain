@@ -29,32 +29,56 @@ namespace SHPA.Blockchain.CQRS
         where TRequest : IRequest<TResponse>
         where TResponse : IResponse
     {
-        Task<TResponse> Handle(TRequest command);
+        Task<TResponse> Handle(TRequest request);
     }
 
-    internal class RequestHandlerWrapper<TResponse> : IRequestHandler<IRequest<TResponse>, TResponse>
-        where TResponse : IResponse
+    public interface IMediatorHandler
     {
+        Task<TResponse> Send<TRequest, TResponse>(TRequest request)
+            where TRequest : IRequest<TResponse>
+            where TResponse : IResponse;
+        Task Publish(IMessage message);
+    }
 
-        public Task<TResponse> Handle(IRequest<TResponse> command)
+    internal abstract class RequestHandlerBase
+    {
+        public abstract Task<object> Handle(object request, IServiceProvider serviceFactory);
+
+        protected static THandler GetHandler<THandler>(IServiceProvider factory)
+        {
+            THandler handler;
+
+            try
+            {
+                handler = (THandler)factory.GetService(typeof(THandler));
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException($"Error constructing handler for request of type {typeof(THandler)}. Register your handlers with the container. See the samples in GitHub for examples.", e);
+            }
+
+            if (handler == null)
+            {
+                throw new InvalidOperationException($"Handler was not found for request of type {typeof(THandler)}. Register your handlers with the container. See the samples in GitHub for examples.");
+            }
+
+            return handler;
+        }
+    }
+
+    internal class RequestHandlerWrapper<TResponse> : RequestHandlerBase
+    {
+        public Task<TResponse> Handle(IRequest<TResponse> command, IServiceProvider serviceFactory)
         {
             throw new NotImplementedException();
         }
     }
-    internal class RequestHandlerWrapperImpl<TRequest, TResponse> : RequestHandlerWrapper<TResponse> 
-        where TResponse : IResponse 
-        where TRequest : IRequest<TResponse>
+    internal class RequestHandlerWrapperImpl<TRequest, TResponse> : RequestHandlerWrapper<TResponse>
     {
         public Task<TResponse> Handle(TRequest command)
         {
             throw new NotImplementedException();
         }
-    }
-
-    public interface IMediatorHandler
-    {
-        Task<TResponse> Send<TResponse>(IRequest<TResponse> request) where TResponse : IResponse;
-        Task Publish(IMessage message);
     }
 
 

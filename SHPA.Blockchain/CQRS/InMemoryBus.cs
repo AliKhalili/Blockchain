@@ -10,16 +10,16 @@ namespace SHPA.Blockchain.CQRS
     public class InMemoryBus : IMediatorHandler
     {
         private static readonly ConcurrentDictionary<Type, object> _requestHandlers = new ConcurrentDictionary<Type, object>();
-
         private readonly IServiceProvider _serviceProvider;
 
         public InMemoryBus(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
             //_handler = new Dictionary<string, IRequestHandler<,>>();
             var type = typeof(IRequestHandler<,>);
             foreach (var innerType in AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()))
             {
-                foreach (var singleHandler in innerType.GetInterfaces().Where(x=>x.IsGenericType).Select(x=>x.GetGenericTypeDefinition()))
+                foreach (var singleHandler in innerType.GetInterfaces().Where(x => x.IsGenericType).Select(x => x.GetGenericTypeDefinition()))
                 {
                     if (singleHandler == type && !string.IsNullOrEmpty(singleHandler.Name))
                     {
@@ -31,18 +31,23 @@ namespace SHPA.Blockchain.CQRS
             }
         }
 
-        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request) where TResponse : IResponse
+        public Task<TResponse> Send<TRequest, TResponse>(TRequest request)
+            where TRequest : IRequest<TResponse>
+            where TResponse : IResponse
         {
             var requestType = request.GetType();
 
-            var handler = (RequestHandlerWrapper<TResponse>)_requestHandlers.GetOrAdd(requestType, Activator.CreateInstance(typeof(RequestHandlerWrapperImpl<,>).MakeGenericType(requestType, typeof(TResponse))));
-
+            var obj = Activator.CreateInstance(
+                typeof(RequestHandlerWrapperImpl<,>).MakeGenericType(requestType, typeof(TResponse)));
+            var handler = _requestHandlers.GetOrAdd(requestType, Activator.CreateInstance(typeof(RequestHandlerWrapperImpl<,>).MakeGenericType(requestType, typeof(TResponse))));
             //return handler.Handle(command);
             //if (_handler.ContainsKey(requestType))
             //{
             //    return _handler[requestType].Handle(command);
             //}
-            return handler.Handle(request);
+            //return handler.Handle(request);
+            ((RequestHandlerBase)handler).Handle(request, cancellationToken, _serviceFactory);
+            throw new System.NotImplementedException();
         }
 
         public Task Publish(IMessage message)
