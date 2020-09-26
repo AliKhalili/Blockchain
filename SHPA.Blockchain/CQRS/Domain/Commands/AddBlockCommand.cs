@@ -2,7 +2,7 @@
 
 namespace SHPA.Blockchain.CQRS.Domain.Commands
 {
-    public class AddBlockCommand:Command
+    public class AddBlockCommand:IRequest<DefaultResponse>
     {
         public Block<Transaction> NewBlock { get; }
 

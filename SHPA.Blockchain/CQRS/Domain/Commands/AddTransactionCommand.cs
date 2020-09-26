@@ -3,7 +3,7 @@
 namespace SHPA.Blockchain.CQRS.Domain.Commands
 {
     
-    public class AddTransactionCommand: Command
+    public class AddTransactionCommand: IRequest<DefaultResponse>
     {
         public AddTransactionCommand(Transaction transaction)
         {

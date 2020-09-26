@@ -9,39 +9,40 @@ namespace SHPA.Blockchain.CQRS
 {
     public class InMemoryBus : IMediatorHandler
     {
-        private readonly Dictionary<string, ICommandHandler<ICommand, IResponse>> _handler;
+        private static readonly ConcurrentDictionary<Type, object> _requestHandlers = new ConcurrentDictionary<Type, object>();
+
         private readonly IServiceProvider _serviceProvider;
 
         public InMemoryBus(IServiceProvider serviceProvider)
         {
-            _handler = new Dictionary<string, ICommandHandler<ICommand, IResponse>>();
-            var type = typeof(ICommandHandler<,>);
+            //_handler = new Dictionary<string, IRequestHandler<,>>();
+            var type = typeof(IRequestHandler<,>);
             foreach (var innerType in AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()))
             {
                 foreach (var singleHandler in innerType.GetInterfaces().Where(x=>x.IsGenericType).Select(x=>x.GetGenericTypeDefinition()))
                 {
-                    if(singleHandler == type && !string.IsNullOrEmpty(singleHandler.Name))
-                        _handler.Add(singleHandler.Name, (ICommandHandler<ICommand, IResponse>)serviceProvider.GetService(singleHandler));
+                    if (singleHandler == type && !string.IsNullOrEmpty(singleHandler.Name))
+                    {
+                        //var handlerMethods = singleHandler.GetMethods();
+                        //var resolve = serviceProvider.GetService(innerType);
+                        //_handler.Add(singleHandler.Name, (ICommandHandler<ICommand, IResponse>)serviceProvider.GetService(singleHandler));
+                    }
                 }
             }
         }
 
-        public Task<IResponse> Send(ICommand command)
+        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request) where TResponse : IResponse
         {
-            var requestType = command.GetType();
+            var requestType = request.GetType();
 
-            //var handler = (ICommandHandler<ICommand, IResponse>)_requestHandlers.GetOrAdd(requestType.ToString(),
-            //    t => Activator.CreateInstance(requestType));
-
-            //var handler = (ICommandHandler<ICommand, IResponse>)_requestHandlers.GetOrAdd(requestType.ToString(),
-            //    _serviceProvider.GetService(ICommandHandler<,>);
+            var handler = (RequestHandlerWrapper<TResponse>)_requestHandlers.GetOrAdd(requestType, Activator.CreateInstance(typeof(RequestHandlerWrapperImpl<,>).MakeGenericType(requestType, typeof(TResponse))));
 
             //return handler.Handle(command);
             //if (_handler.ContainsKey(requestType))
             //{
             //    return _handler[requestType].Handle(command);
             //}
-            throw new NotImplementedException();
+            return handler.Handle(request);
         }
 
         public Task Publish(IMessage message)

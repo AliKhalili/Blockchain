@@ -56,7 +56,8 @@ namespace SHPA.Blockchain
             serviceCollection.AddTransient<RegisterNodeAction>();
             serviceCollection.AddTransient<GetRegisterNodeAction>();
             serviceCollection.AddTransient<AddBlockAction>();
-            serviceCollection.AddTransient<ICommandHandler<AddBlockCommand, DefaultResponse>, CommandHandler>();
+            serviceCollection.AddTransient<IRequestHandler<AddBlockCommand, DefaultResponse>, RequestHandler>();
+            serviceCollection.AddTransient<IRequestHandler<AddTransactionCommand, DefaultResponse>, RequestHandler>();
         }
     }
 }

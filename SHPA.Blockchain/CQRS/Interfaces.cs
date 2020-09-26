@@ -8,33 +8,54 @@ namespace SHPA.Blockchain.CQRS
     {
 
     }
-    public interface ICommand : IMessage
+
+    public interface IRequest<out TResponse> : IMessage
     {
-        Type GetType();
-        Guid GetId();
-        DateTime GetTimespan();
+        //Type GetType();
+        //Guid GetId();
+        //DateTime GetTimespan();
     }
 
     public interface IResponse
     {
-        Guid GetCommandId();
-        Guid GetId();
-        DateTime GetTimespan();
+        //Guid GetCommandId();
+        //Guid GetId();
+        //DateTime GetTimespan();
         bool IsSuccess();
         string[] Errors();
     }
 
-    public interface ICommandHandler<in TCommand, TResponse>
-        where TCommand : ICommand
+    public interface IRequestHandler<in TRequest, TResponse>
+        where TRequest : IRequest<TResponse>
         where TResponse : IResponse
     {
-        Task<TResponse> Handle(TCommand command);
+        Task<TResponse> Handle(TRequest command);
     }
 
+    internal class RequestHandlerWrapper<TResponse> : IRequestHandler<IRequest<TResponse>, TResponse>
+        where TResponse : IResponse
+    {
+
+        public Task<TResponse> Handle(IRequest<TResponse> command)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    internal class RequestHandlerWrapperImpl<TRequest, TResponse> : RequestHandlerWrapper<TResponse> 
+        where TResponse : IResponse 
+        where TRequest : IRequest<TResponse>
+    {
+        public Task<TResponse> Handle(TRequest command)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public interface IMediatorHandler
     {
-        Task<IResponse> Send(ICommand command);
+        Task<TResponse> Send<TResponse>(IRequest<TResponse> request) where TResponse : IResponse;
         Task Publish(IMessage message);
     }
+
+
 }
