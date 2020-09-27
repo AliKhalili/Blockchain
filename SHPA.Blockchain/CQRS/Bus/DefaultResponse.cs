@@ -1,4 +1,4 @@
-﻿namespace SHPA.Blockchain.CQRS
+﻿namespace SHPA.Blockchain.CQRS.Bus
 {
     public class DefaultResponse:IResponse
     {

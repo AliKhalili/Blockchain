@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using SHPA.Blockchain.CQRS.Bus;
 using SHPA.Blockchain.CQRS.Domain.Commands;
 
 namespace SHPA.Blockchain.CQRS.Domain

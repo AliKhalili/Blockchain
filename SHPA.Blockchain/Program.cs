@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Threading;
 using SHPA.Blockchain.CQRS;
+using SHPA.Blockchain.CQRS.Bus;
 using SHPA.Blockchain.CQRS.Domain;
 using SHPA.Blockchain.CQRS.Domain.Commands;
 using SHPA.Blockchain.Server.Actions.Custom;

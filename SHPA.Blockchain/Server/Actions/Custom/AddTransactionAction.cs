@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using SHPA.Blockchain.Blocks;
 using SHPA.Blockchain.CQRS;
+using SHPA.Blockchain.CQRS.Bus;
 using SHPA.Blockchain.CQRS.Domain.Commands;
 using SHPA.Blockchain.Server.ActionResult;
 

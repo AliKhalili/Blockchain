@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace SHPA.Blockchain.CQRS
+namespace SHPA.Blockchain.CQRS.Bus
 {
     public class InMemoryBus : IMediatorHandler
     {

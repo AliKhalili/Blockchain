@@ -1,4 +1,5 @@
 ﻿using SHPA.Blockchain.Blocks;
+using SHPA.Blockchain.CQRS.Bus;
 
 namespace SHPA.Blockchain.CQRS.Domain.Commands
 {
