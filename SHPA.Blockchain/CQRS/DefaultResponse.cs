@@ -4,7 +4,7 @@
     {
         public bool IsSuccess()
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
         public string[] Errors()
