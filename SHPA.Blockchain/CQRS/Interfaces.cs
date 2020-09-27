@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,8 +43,7 @@ namespace SHPA.Blockchain.CQRS
 
     internal abstract class RequestHandlerBase
     {
-        public abstract Task<object> Handle(object request, IServiceProvider serviceFactory);
-
+        public abstract Task<object?> Handle(object request, IServiceProvider serviceFactory);
         protected static THandler GetHandler<THandler>(IServiceProvider factory)
         {
             THandler handler;
@@ -66,20 +66,32 @@ namespace SHPA.Blockchain.CQRS
         }
     }
 
-    internal class RequestHandlerWrapper<TResponse> : RequestHandlerBase
+    internal abstract class RequestHandlerWrapper<TResponse> : RequestHandlerBase
     {
-        public Task<TResponse> Handle(IRequest<TResponse> command, IServiceProvider serviceFactory)
-        {
-            throw new NotImplementedException();
-        }
+        //public abstract Task<TResponse> Handle(IRequest<TResponse> request, IServiceProvider serviceFactory);
+
     }
     internal class RequestHandlerWrapperImpl<TRequest, TResponse> : RequestHandlerWrapper<TResponse>
+        where TRequest : IRequest<TResponse>
+        where TResponse : IResponse
     {
-        public Task<TResponse> Handle(TRequest command)
+        //public override Task<TResponse> Handle(IRequest<TResponse> request, IServiceProvider serviceFactory)
+        //{
+        //    Task<TResponse> Handler() => GetHandler<IRequestHandler<TRequest, TResponse>>(serviceFactory).Handle((TRequest)request);
+        //    return Handle((IRequest<TResponse>)request, serviceFactory);
+        //}
+
+        public override Task<object?> Handle(object request, IServiceProvider serviceFactory)
         {
-            throw new NotImplementedException();
+            return Handle((IRequest<TResponse>)request, serviceFactory).ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    ExceptionDispatchInfo.Capture(t.Exception.InnerException).Throw();
+                }
+
+                return (object?)t.Result;
+            }, new CancellationToken(false));
         }
     }
-
-
 }

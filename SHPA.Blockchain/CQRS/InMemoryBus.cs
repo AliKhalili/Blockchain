@@ -37,16 +37,23 @@ namespace SHPA.Blockchain.CQRS
         {
             var requestType = request.GetType();
 
-            var obj = Activator.CreateInstance(
-                typeof(RequestHandlerWrapperImpl<,>).MakeGenericType(requestType, typeof(TResponse)));
-            var handler = _requestHandlers.GetOrAdd(requestType, Activator.CreateInstance(typeof(RequestHandlerWrapperImpl<,>).MakeGenericType(requestType, typeof(TResponse))));
+            var obj = (RequestHandlerBase)Activator.CreateInstance(typeof(RequestHandlerWrapperImpl<TRequest, TResponse>).MakeGenericType(requestType, typeof(TResponse)));
+            //var handler = _requestHandlers.GetOrAdd(requestType, Activator.CreateInstance(typeof(RequestHandlerWrapperImpl<TRequest, TResponse>).MakeGenericType(requestType, typeof(TResponse))));
             //return handler.Handle(command);
             //if (_handler.ContainsKey(requestType))
             //{
             //    return _handler[requestType].Handle(command);
             //}
             //return handler.Handle(request);
-            ((RequestHandlerBase)handler).Handle(request, cancellationToken, _serviceFactory);
+            try
+            {
+                var x = obj.Handle(request, _serviceProvider);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
             throw new System.NotImplementedException();
         }
 
