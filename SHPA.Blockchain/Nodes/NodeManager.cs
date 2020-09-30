@@ -15,7 +15,7 @@ namespace SHPA.Blockchain.Nodes
     {
         private readonly NodeConfiguration _option;
         private readonly Dictionary<string, Node> _nodes;
-        private Node _node;
+        private readonly Node _node;
 
         public NodeManager(IOptions<NodeConfiguration> option)
         {
