@@ -1,15 +1,14 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
+using SHPA.Blockchain.CQRS.Bus;
 using SHPA.Blockchain.Server.ActionResult;
 
 namespace SHPA.Blockchain.Server.Actions.Custom
 {
     public class ValidateChainAction : ActionBase
     {
-        private readonly IEngine _engine;
-        public ValidateChainAction(IEngine engine)
+        public ValidateChainAction(IMediatorHandler bus) : base(bus)
         {
-            _engine = engine;
         }
         public override async Task<IActionResult> Execute(HttpListenerRequest request)
         {

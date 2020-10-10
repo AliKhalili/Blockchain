@@ -17,7 +17,7 @@ namespace SHPA.Blockchain.Server.Actions.Custom
             var input = ParseBody<Block<Transaction>>(request);
             if (input != null)
             {
-                var result =await _bus.Send<AddBlockCommand,DefaultResponse>(new AddBlockCommand(input));
+                var result =await Bus.Send<AddBlockCommand,DefaultResponse>(new AddBlockCommand(input));
                 if (result.IsSuccess())
                     return new ActionResult<bool>().AddResult(true);
                 return new ActionResult<bool>().AddErrors(result.Errors());

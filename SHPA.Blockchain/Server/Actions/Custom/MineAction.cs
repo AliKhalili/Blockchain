@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using SHPA.Blockchain.Blocks;
+using SHPA.Blockchain.CQRS.Bus;
 using SHPA.Blockchain.Server.ActionResult;
 
 namespace SHPA.Blockchain.Server.Actions.Custom
@@ -8,7 +9,7 @@ namespace SHPA.Blockchain.Server.Actions.Custom
     public class MineAction : ActionBase
     {
         private readonly IEngine _engine;
-        public MineAction(IEngine engine)
+        public MineAction(IMediatorHandler bus) : base(bus)
         {
             _engine = engine;
         }

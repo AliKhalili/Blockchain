@@ -9,11 +9,11 @@ namespace SHPA.Blockchain.Server.Actions
 {
     public abstract class ActionBase : IAction
     {
-        protected readonly IMediatorHandler _bus;
+        protected readonly IMediatorHandler Bus;
 
-        protected ActionBase(IMediatorHandler bus)
+        protected ActionBase(IMediatorHandler bus = null)
         {
-            _bus = bus;
+            Bus = bus;
         }
         public virtual Task<IActionResult> Execute(HttpListenerRequest request)
         {
