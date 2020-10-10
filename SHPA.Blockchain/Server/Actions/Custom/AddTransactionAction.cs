@@ -10,10 +10,8 @@ namespace SHPA.Blockchain.Server.Actions.Custom
 {
     public class AddTransactionAction : ActionBase
     {
-        private readonly IMediatorHandler _bus;
-        public AddTransactionAction(IMediatorHandler bus)
+        public AddTransactionAction(IMediatorHandler bus):base(bus)
         {
-            _bus = bus;
         }
         public override async Task<IActionResult> Execute(HttpListenerRequest request)
         {

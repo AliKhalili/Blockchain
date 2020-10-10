@@ -42,7 +42,7 @@ namespace SHPA.Blockchain
             serviceCollection.AddTransient<Application>();
             serviceCollection.AddSingleton<IEngine, Engine>();
             serviceCollection.AddSingleton<IMediatorHandler, InMemoryBus>();
-            serviceCollection.AddTransient<IBlockchain, Blocks.Blockchain>();
+            //serviceCollection.AddTransient<IBlockchain, Blocks.Blockchain>();
             serviceCollection.AddTransient<INodeManager, NodeManager>();
             serviceCollection.AddTransient<IServer, EmbeddedRestServer>();
             serviceCollection.AddTransient<IRequestHandler, RestHandler>();

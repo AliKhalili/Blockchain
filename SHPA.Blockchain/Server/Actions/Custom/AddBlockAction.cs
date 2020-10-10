@@ -1,28 +1,26 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using SHPA.Blockchain.Blocks;
+using SHPA.Blockchain.CQRS.Bus;
+using SHPA.Blockchain.CQRS.Domain.Commands;
 using SHPA.Blockchain.Server.ActionResult;
 
 namespace SHPA.Blockchain.Server.Actions.Custom
 {
     public class AddBlockAction : ActionBase
     {
-        private readonly IEngine _engine;
-
-        public AddBlockAction(IEngine engine)
+        public AddBlockAction(IMediatorHandler bus) :base(bus)
         {
-            _engine = engine;
         }
         public override async Task<IActionResult> Execute(HttpListenerRequest request)
         {
             var input = ParseBody<Block<Transaction>>(request);
             if (input != null)
             {
-                var (result, error) = _engine.AddBlock(input);
-                var actionResult = new ActionResult<bool>().AddResult(result);
-                if (error != null)
-                    return actionResult.AddErrors(new[] { error });
-                return actionResult;
+                var result =await _bus.Send<AddBlockCommand,DefaultResponse>(new AddBlockCommand(input));
+                if (result.IsSuccess())
+                    return new ActionResult<bool>().AddResult(true);
+                return new ActionResult<bool>().AddErrors(result.Errors());
             }
             return new NotFoundActionResult();
         }

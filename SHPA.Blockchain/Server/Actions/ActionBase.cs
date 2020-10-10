@@ -3,11 +3,18 @@ using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using SHPA.Blockchain.CQRS.Bus;
 
 namespace SHPA.Blockchain.Server.Actions
 {
     public abstract class ActionBase : IAction
     {
+        protected readonly IMediatorHandler _bus;
+
+        protected ActionBase(IMediatorHandler bus)
+        {
+            _bus = bus;
+        }
         public virtual Task<IActionResult> Execute(HttpListenerRequest request)
         {
             throw new System.NotImplementedException();
