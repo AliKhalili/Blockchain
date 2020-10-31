@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using SHPA.Blockchain.CQRS.Bus;
+using SHPA.Blockchain.CQRS.Domain.Commands;
 using SHPA.Blockchain.Nodes;
 using SHPA.Blockchain.Server.ActionResult;
 
@@ -17,10 +18,11 @@ namespace SHPA.Blockchain.Server.Actions.Custom
             if (input != null)
             {
                 var enableRegisterBack = ParseQuery<bool>(request, "enableRegisterBack");
-                var (result, message) = _engine.RegisterNode(input, enableRegisterBack);
-                if (!result)
-                    return new ActionResult<bool>().AddErrors(new[] { message });
-                return new ActionResult<bool>();
+                var result = await Bus.Send<AddNodeCommand, DefaultResponse>(new AddNodeCommand(enableRegisterBack));
+
+                if (result.IsSuccess())
+                    return new ActionResult<bool>();
+                return new ActionResult<bool>().AddErrors(result.Errors());
 
             }
             return new NotFoundActionResult();

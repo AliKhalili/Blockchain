@@ -1,18 +1,18 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using SHPA.Blockchain.Blocks;
-using SHPA.Blockchain.CQRS.Bus;
+using SHPA.Blockchain.CQRS.Domain;
 using SHPA.Blockchain.Server.ActionResult;
 
 namespace SHPA.Blockchain.Server.Actions.Custom
 {
     public class ChainAction : ActionBase
     {
-        private readonly IEngine _engine;
+        private readonly IQueryService _queryService;
 
-        public ChainAction(IMediatorHandler bus) : base(bus)
+        public ChainAction(IQueryService queryService) : base()
         {
-            _engine = engine;
+            _queryService = queryService;
         }
         public override async Task<IActionResult> Execute(HttpListenerRequest request)
         {
@@ -20,7 +20,7 @@ namespace SHPA.Blockchain.Server.Actions.Custom
             {
                 return new NotFoundActionResult();
             }
-            return new ActionResult<Block<Transaction>[]>().AddResult(_engine.GetChain());
+            return new ActionResult<Block<Transaction>[]>().AddResult(await _queryService.GetChainAsync());
         }
     }
 }
