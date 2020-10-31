@@ -2,7 +2,6 @@
 using System;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace SHPA.Blockchain.Server
@@ -15,9 +14,8 @@ namespace SHPA.Blockchain.Server
         {
             _actionFactory = actionFactory;
         }
-        public async Task HandleAsync(Task<HttpListenerContext> taskListener)
+        public async Task HandleAsync(HttpListenerContext context)
         {
-            var context = await taskListener;
             HttpListenerRequest request = context.Request;
             IActionResult result;
             try

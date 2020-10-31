@@ -21,6 +21,7 @@
         public string Host { get; set; }
 
         public int MaxNodeCapacity { get; set; }
+        public int MaxThread { get; set; }
 
         public string GetFullAddress()
         {
