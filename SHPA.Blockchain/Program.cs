@@ -42,7 +42,8 @@ namespace SHPA.Blockchain
             serviceCollection.AddTransient<Application>();
             serviceCollection.AddSingleton<IEngine, Engine>();
             serviceCollection.AddSingleton<IMediatorHandler, InMemoryBus>();
-            //serviceCollection.AddTransient<IBlockchain, Blocks.Blockchain>();
+            serviceCollection.AddTransient<IBlockchain, Blocks.Blockchain>();
+            serviceCollection.AddTransient<IQueryService, QueryService>();
             serviceCollection.AddTransient<INodeManager, NodeManager>();
             serviceCollection.AddTransient<IServer, EmbeddedRestServer>();
             serviceCollection.AddTransient<IRequestHandler, RestHandler>();
@@ -53,6 +54,7 @@ namespace SHPA.Blockchain
             serviceCollection.AddTransient<MineAction>();
             serviceCollection.AddTransient<PingAction>();
             serviceCollection.AddTransient<ChainAction>();
+            serviceCollection.AddTransient<FakeLoadAction>();
             serviceCollection.AddTransient<ValidateChainAction>();
             serviceCollection.AddTransient<RegisterNodeAction>();
             serviceCollection.AddTransient<GetRegisterNodeAction>();

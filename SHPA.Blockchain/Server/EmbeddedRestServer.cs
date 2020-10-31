@@ -34,8 +34,7 @@ namespace SHPA.Blockchain.Server
             {
                 while (true)
                 {
-                    _listener.GetContextAsync().ContinueWith(ContinuationAction, cancellationToken)
-                        .Wait(cancellationToken);
+                    _listener.GetContextAsync().ContinueWith(ContinuationAction, cancellationToken);
                 }
             }, cancellationToken);
 
