@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using SHPA.Blockchain.Configuration;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
@@ -17,7 +18,7 @@ namespace SHPA.Blockchain.Server
         private readonly NodeConfiguration _option;
         private HttpListener _listener;
         private readonly Thread[] _workers;
-        private Queue<HttpListenerContext> _queue;
+        private ConcurrentQueue<HttpListenerContext> _queue;
         private readonly ManualResetEvent _stop, _ready;
 
         public EmbeddedRestServer(IOptions<NodeConfiguration> option, IRequestHandler requestHandler)
@@ -27,7 +28,7 @@ namespace SHPA.Blockchain.Server
             _workers = new Thread[_option.MaxThread];
             _stop = new ManualResetEvent(false);
             _ready = new ManualResetEvent(false);
-            _queue = new Queue<HttpListenerContext>();
+            _queue = new ConcurrentQueue<HttpListenerContext>();
         }
         public void Start(CancellationToken cancellationToken)
         {
@@ -58,33 +59,23 @@ namespace SHPA.Blockchain.Server
 
         private void ContextReady(IAsyncResult ar)
         {
-            try
-            {
-                lock (_queue)
-                {
-                    _queue.Enqueue(_listener.EndGetContext(ar));
-                    _ready.Set();
-                }
-            }
-            catch { return; }
+            _queue.Enqueue(_listener.EndGetContext(ar));
+            _ready.Set();
         }
         private void Worker()
         {
             WaitHandle[] wait = { _ready, _stop };
             while (0 == WaitHandle.WaitAny(wait))
             {
-                HttpListenerContext context;
-                lock (_queue)
+                if (_queue.TryDequeue(out var context))
                 {
-                    if (_queue.Count > 0)
-                        context = _queue.Dequeue();
-                    else
-                    {
-                        _ready.Reset();
-                        continue;
-                    }
-                }
 
+                }
+                else
+                {
+                    _ready.Reset();
+                    continue;
+                }
                 try
                 {
                     _requestHandler.HandleAsync(context);
