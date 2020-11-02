@@ -69,18 +69,10 @@ namespace SHPA.Blockchain.Server
             {
                 if (_queue.TryDequeue(out var context))
                 {
-
-                }
-                else
-                {
-                    _ready.Reset();
-                    continue;
-                }
-                try
-                {
                     _requestHandler.HandleAsync(context);
                 }
-                catch (Exception e) { Console.Error.WriteLine(e); }
+                else
+                    _ready.Reset();
             }
         }
 
