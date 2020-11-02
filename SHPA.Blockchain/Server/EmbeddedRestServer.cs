@@ -19,7 +19,6 @@ namespace SHPA.Blockchain.Server
         private readonly Thread[] _workers;
         private Queue<HttpListenerContext> _queue;
         private readonly ManualResetEvent _stop, _ready;
-        private CancellationToken _cancellationToken;
 
         public EmbeddedRestServer(IOptions<NodeConfiguration> option, IRequestHandler requestHandler)
         {
@@ -32,7 +31,6 @@ namespace SHPA.Blockchain.Server
         }
         public void Start(CancellationToken cancellationToken)
         {
-            _cancellationToken = cancellationToken;
             if (_listener != null)
                 throw new InvalidOperationException("server is already running");
             _listener = new HttpListener();
