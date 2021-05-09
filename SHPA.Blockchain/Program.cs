@@ -9,6 +9,7 @@ using SHPA.Blockchain.Server;
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using SHPA.Blockchain.CQRS;
 using SHPA.Blockchain.CQRS.Bus;
 using SHPA.Blockchain.CQRS.Domain;
@@ -19,15 +20,26 @@ namespace SHPA.Blockchain
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            var serviceCollection = new ServiceCollection();
-            ConfigureServices(serviceCollection);
+            HttpServer server = new HttpServer();
+            await server.StartAsync(new DummyApplication(context =>
+            {
+                var processTime = new Random().Next(5);
+                processTime = 4;
+                var requestId = Guid.NewGuid().ToString().Replace("-","").ToLower();
+                Console.WriteLine("{2:T}-start process request {1} and process time is {0}s", processTime, requestId, DateTimeOffset.UtcNow);
+                Thread.Sleep(processTime * 1000);
+                Console.WriteLine("{2:T}-finish process request {1} and process time is {0}s", processTime, requestId, DateTimeOffset.UtcNow);
+                return Task.CompletedTask;
+            }), CancellationToken.None);
+            //var serviceCollection = new ServiceCollection();
+            //ConfigureServices(serviceCollection);
 
-            var serviceProvider = serviceCollection.BuildServiceProvider();
+            //var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            var cancellationTokenSource = new CancellationTokenSource();
-            serviceProvider.GetService<Application>().Run(cancellationTokenSource);
+            //var cancellationTokenSource = new CancellationTokenSource();
+            //serviceProvider.GetService<Application>().Run(cancellationTokenSource);
         }
 
         private static void ConfigureServices(IServiceCollection serviceCollection)

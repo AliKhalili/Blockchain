@@ -88,5 +88,16 @@ namespace SHPA.Blockchain.Server
                 worker.Join();
             _listener.Stop();
         }
+
+        public IFeatureCollection Features { get; }
+        public Task StartAsync<TContext>(IHttpApplication<TContext> application, CancellationToken cancellationToken) where TContext : notnull
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

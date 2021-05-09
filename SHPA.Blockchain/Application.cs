@@ -28,7 +28,6 @@ namespace SHPA.Blockchain
         }
         public void Run(CancellationTokenSource cancellationToken)
         {
-            _server.Start(cancellationToken.Token);
             WaitForCommand(cancellationToken);
         }
 
