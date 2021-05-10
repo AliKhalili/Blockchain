@@ -6,13 +6,15 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace SHPA.Blockchain.Server
 {
     /// <summary>
     /// A tiny web server in order to handle REST api request, implemented by HttpListenerRequest
     /// </summary>
-    public class EmbeddedRestServer : IServer
+    public class EmbeddedRestServer 
     {
         private readonly IRequestHandler _requestHandler;
         private readonly NodeConfiguration _option;
@@ -74,30 +76,6 @@ namespace SHPA.Blockchain.Server
                 else
                     _ready.Reset();
             }
-        }
-
-        public void Dispose()
-        {
-            Stop();
-        }
-
-        public void Stop()
-        {
-            _stop.Set();
-            foreach (Thread worker in _workers)
-                worker.Join();
-            _listener.Stop();
-        }
-
-        public IFeatureCollection Features { get; }
-        public Task StartAsync<TContext>(IHttpApplication<TContext> application, CancellationToken cancellationToken) where TContext : notnull
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
         }
     }
 }
