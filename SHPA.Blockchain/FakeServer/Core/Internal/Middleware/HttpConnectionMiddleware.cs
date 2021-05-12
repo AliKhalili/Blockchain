@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting.Server;
 using SHPA.Blockchain.FakeServer.Core.Internal.Connections;
+using SHPA.Blockchain.FakeServer.Core.Internal.Http;
 
 namespace SHPA.Blockchain.FakeServer.Core.Internal.Middleware
 {
