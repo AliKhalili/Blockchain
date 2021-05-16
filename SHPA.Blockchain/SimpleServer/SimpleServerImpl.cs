@@ -33,7 +33,7 @@ namespace SHPA.Blockchain.SimpleServer
                     var asyncResult = _listener.BeginGetContext(async ar =>
                     {
                         var listenerContext = _listener.EndGetContext(ar);
-                        var context = application.CreateContext(listenerContext.ToFeatureCollection());
+                        var context = application.CreateContext(new HttpProtocol(listenerContext));
                         await application.ProcessRequestAsync(context);
                     }, application);
                     asyncResult.AsyncWaitHandle.WaitOne();

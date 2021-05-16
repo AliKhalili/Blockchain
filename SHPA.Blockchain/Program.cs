@@ -8,6 +8,7 @@ using SHPA.Blockchain.Nodes;
 using SHPA.Blockchain.Server;
 using System;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -18,16 +19,16 @@ using SHPA.Blockchain.CQRS;
 using SHPA.Blockchain.CQRS.Bus;
 using SHPA.Blockchain.CQRS.Domain;
 using SHPA.Blockchain.CQRS.Domain.Commands;
-using SHPA.Blockchain.FakeServer;
 using SHPA.Blockchain.Server.Actions.Custom;
+using SHPA.Blockchain.SimpleServer;
 
 namespace SHPA.Blockchain
 {
     class Program
     {
-        public static void Main(string[] args)
+        public static Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            return CreateHostBuilder(args).Build().RunAsync();
         }
         //static async Task Main(string[] args)
         //{
@@ -94,13 +95,20 @@ namespace SHPA.Blockchain
 
             public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
             {
+                app.Run(async context =>
+                {
+                    Console.WriteLine(context.Request.QueryString);
+                });
             }
         }
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webHostBuilder =>
                 {
-                    webHostBuilder.UseFakeServer();
+                    webHostBuilder.UseSimpleServer((context, options) =>
+                    {
+                        options.Listen(IPAddress.Parse("127.0.0.1"), 5000);
+                    });
                     webHostBuilder.UseStartup<Startup>();
                 });
     }
