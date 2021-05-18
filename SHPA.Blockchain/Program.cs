@@ -99,7 +99,7 @@ namespace SHPA.Blockchain
                 app.Run(async context =>
                 {
                     Console.WriteLine(context.Request.QueryString);
-                    var response = $"hello, world{Environment.NewLine}";
+                    var response = $"{DateTimeOffset.UtcNow.Ticks}- hello, world{Environment.NewLine}";
                     context.Response.ContentLength = response.Length;
                     context.Response.ContentType = "text/plain";
                     context.Response.StatusCode = 200;

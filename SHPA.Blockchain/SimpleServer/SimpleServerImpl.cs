@@ -30,17 +30,21 @@ namespace SHPA.Blockchain.SimpleServer
                 _listener.Prefixes.Add(_options.CodeBackedListenOption.ToUrl());
                 _listener.Start();
                 Console.WriteLine("Now listening on: {0}", url);
-                while (_listener.IsListening || !cancellationToken.IsCancellationRequested)
-                {
-                    var asyncResult = _listener.BeginGetContext(async ar =>
-                    {
-                        var listenerContext = _listener.EndGetContext(ar);
-                        var context = application.CreateContext(new HttpProtocol(listenerContext));
-                        await application.ProcessRequestAsync(context);
-                        listenerContext.Response.OutputStream.Close();
-                    }, application);
-                    asyncResult.AsyncWaitHandle.WaitOne();
-                }
+                _ = Task.Run(() =>
+                  {
+                      while (_listener.IsListening || !cancellationToken.IsCancellationRequested)
+                      {
+                          var asyncResult = _listener.BeginGetContext(async ar =>
+                          {
+                              var listenerContext = _listener.EndGetContext(ar);
+                              var context = application.CreateContext(new HttpProtocol(listenerContext));
+                              await application.ProcessRequestAsync(context);
+                              listenerContext.Response.OutputStream.Close();
+                          }, application);
+                          asyncResult.AsyncWaitHandle.WaitOne();
+                      }
+                  }, cancellationToken);
+
             }
             catch (Exception e)
             {
