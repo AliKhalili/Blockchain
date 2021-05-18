@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SHPA.Blockchain.CQRS;
@@ -98,6 +99,12 @@ namespace SHPA.Blockchain
                 app.Run(async context =>
                 {
                     Console.WriteLine(context.Request.QueryString);
+                    var response = $"hello, world{Environment.NewLine}";
+                    context.Response.ContentLength = response.Length;
+                    context.Response.ContentType = "text/plain";
+                    context.Response.StatusCode = 200;
+                    await context.Response.WriteAsync(response);
+                    Console.WriteLine("waiting for another request");
                 });
             }
         }
@@ -107,7 +114,7 @@ namespace SHPA.Blockchain
                 {
                     webHostBuilder.UseSimpleServer((context, options) =>
                     {
-                        options.Listen(IPAddress.Parse("127.0.0.1"), 5000);
+                        options.Listen(IPAddress.Parse("127.0.0.1"), 8080);
                     });
                     webHostBuilder.UseStartup<Startup>();
                 });

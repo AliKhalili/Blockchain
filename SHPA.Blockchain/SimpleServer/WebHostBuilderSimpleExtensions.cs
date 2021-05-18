@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace SHPA.Blockchain.SimpleServer
 {
@@ -11,6 +12,7 @@ namespace SHPA.Blockchain.SimpleServer
         {
             return hostBuilder.ConfigureServices((context, services) =>
             {
+                services.AddTransient<IConfigureOptions<SimpleServerOptions>, SimpleServerOptionsSetup>();
                 services.AddSingleton<IServer, SimpleServerImpl>();
                 services.Configure<SimpleServerOptions>(options =>
                 {

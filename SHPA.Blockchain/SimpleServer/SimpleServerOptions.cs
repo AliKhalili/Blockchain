@@ -5,6 +5,10 @@ namespace SHPA.Blockchain.SimpleServer
 {
     public class SimpleServerOptions
     {
+        public SimpleServerOptions()
+        {
+        }
+
         public SimpleListenOptions CodeBackedListenOption { get; private set; }
         public IServiceProvider ApplicationServices { get; set; }
 

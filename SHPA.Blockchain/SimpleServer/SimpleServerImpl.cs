@@ -26,8 +26,10 @@ namespace SHPA.Blockchain.SimpleServer
         {
             try
             {
+                var url = _options.CodeBackedListenOption.ToUrl();
                 _listener.Prefixes.Add(_options.CodeBackedListenOption.ToUrl());
                 _listener.Start();
+                Console.WriteLine("Now listening on: {0}", url);
                 while (_listener.IsListening || !cancellationToken.IsCancellationRequested)
                 {
                     var asyncResult = _listener.BeginGetContext(async ar =>
@@ -35,6 +37,7 @@ namespace SHPA.Blockchain.SimpleServer
                         var listenerContext = _listener.EndGetContext(ar);
                         var context = application.CreateContext(new HttpProtocol(listenerContext));
                         await application.ProcessRequestAsync(context);
+                        listenerContext.Response.OutputStream.Close();
                     }, application);
                     asyncResult.AsyncWaitHandle.WaitOne();
                 }
@@ -48,11 +51,10 @@ namespace SHPA.Blockchain.SimpleServer
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.CompletedTask;
         }
         public void Dispose()
         {
-            throw new System.NotImplementedException();
         }
 
         public IFeatureCollection Features { get; }

@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Http.Features.Authentication;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Features;
 using Microsoft.Extensions.Primitives;
 
 namespace SHPA.Blockchain.SimpleServer
 {
     public partial class HttpProtocol : IFeatureCollection
-    , IHttpRequestFeature
+    //, IHttpRequestFeature
     //,IHttpResponseFeature
     //,IHttpResponseBodyFeature
     //,IRouteValuesFeature
@@ -41,6 +37,8 @@ namespace SHPA.Blockchain.SimpleServer
         {
             _context = listenerContext;
             _currentIHttpRequestFeature = ToHttpRequestFeature(listenerContext);
+            _currentIHttpResponseFeature = ToHttpResponseFeature(listenerContext);
+            _currentIHttpResponseBodyFeature = new StreamResponseBodyFeature(listenerContext.Response.OutputStream);
         }
 
 
@@ -51,6 +49,14 @@ namespace SHPA.Blockchain.SimpleServer
             if (_currentIHttpRequestFeature != null)
             {
                 yield return new KeyValuePair<Type, object>(typeof(IHttpRequestFeature), _currentIHttpRequestFeature);
+            }
+            if (_currentIHttpResponseFeature != null)
+            {
+                yield return new KeyValuePair<Type, object>(typeof(IHttpResponseFeature), _currentIHttpResponseFeature);
+            }
+            if (_currentIHttpResponseBodyFeature != null)
+            {
+                yield return new KeyValuePair<Type, object>(typeof(IHttpResponseBodyFeature), _currentIHttpResponseBodyFeature);
             }
         }
 
@@ -64,11 +70,31 @@ namespace SHPA.Blockchain.SimpleServer
             {
                 feature = Unsafe.As<IHttpRequestFeature?, TFeature?>(ref _currentIHttpRequestFeature);
             }
+            else if (typeof(TFeature) == typeof(IHttpResponseFeature))
+            {
+                feature = Unsafe.As<IHttpResponseFeature?, TFeature?>(ref _currentIHttpResponseFeature);
+            }
+            else if (typeof(TFeature) == typeof(IHttpResponseBodyFeature))
+            {
+                feature = Unsafe.As<IHttpResponseBodyFeature?, TFeature?>(ref _currentIHttpResponseBodyFeature);
+            }
             return feature;
         }
-        public void Set<TFeature>(TFeature instance)
+        public void Set<TFeature>(TFeature feature)
         {
-            throw new NotImplementedException();
+            _featureRevision++;
+            if (typeof(TFeature) == typeof(IHttpRequestFeature))
+            {
+                _currentIHttpRequestFeature = Unsafe.As<TFeature?, IHttpRequestFeature?>(ref feature);
+            }
+            else if (typeof(TFeature) == typeof(IHttpResponseFeature))
+            {
+                _currentIHttpResponseFeature = Unsafe.As<TFeature?, IHttpResponseFeature?>(ref feature);
+            }
+            else if (typeof(TFeature) == typeof(IHttpResponseBodyFeature))
+            {
+                _currentIHttpResponseBodyFeature = Unsafe.As<TFeature?, IHttpResponseBodyFeature?>(ref feature);
+            }
         }
 
         public bool IsReadOnly => false;
@@ -83,14 +109,14 @@ namespace SHPA.Blockchain.SimpleServer
                 {
                     feature = _currentIHttpRequestFeature;
                 }
-                //else if (key == typeof(IHttpResponseFeature))
-                //{
-                //    feature = _currentIHttpResponseFeature;
-                //}
-                //else if (key == typeof(IHttpResponseBodyFeature))
-                //{
-                //    feature = _currentIHttpResponseBodyFeature;
-                //}
+                else if (key == typeof(IHttpResponseFeature))
+                {
+                    feature = _currentIHttpResponseFeature;
+                }
+                else if (key == typeof(IHttpResponseBodyFeature))
+                {
+                    feature = _currentIHttpResponseBodyFeature;
+                }
                 //else if (key == typeof(IRouteValuesFeature))
                 //{
                 //    feature = _currentIRouteValuesFeature;
@@ -203,14 +229,14 @@ namespace SHPA.Blockchain.SimpleServer
                 {
                     _currentIHttpRequestFeature = (IHttpRequestFeature?)value;
                 }
-                //else if (key == typeof(IHttpResponseFeature))
-                //{
-                //    _currentIHttpResponseFeature = (IHttpResponseFeature?)value;
-                //}
-                //else if (key == typeof(IHttpResponseBodyFeature))
-                //{
-                //    _currentIHttpResponseBodyFeature = (IHttpResponseBodyFeature?)value;
-                //}
+                else if (key == typeof(IHttpResponseFeature))
+                {
+                    _currentIHttpResponseFeature = (IHttpResponseFeature?)value;
+                }
+                else if (key == typeof(IHttpResponseBodyFeature))
+                {
+                    _currentIHttpResponseBodyFeature = (IHttpResponseBodyFeature?)value;
+                }
                 //else if (key == typeof(IRouteValuesFeature))
                 //{
                 //    _currentIRouteValuesFeature = (IRouteValuesFeature?)value;
@@ -315,8 +341,10 @@ namespace SHPA.Blockchain.SimpleServer
         }
         #endregion
 
-        #region IHttpRequestFeature
 
+        internal protected IHttpRequestFeature? _currentIHttpRequestFeature;
+        internal protected IHttpResponseFeature? _currentIHttpResponseFeature;
+        internal protected IHttpResponseBodyFeature? _currentIHttpResponseBodyFeature;
         private IHttpRequestFeature ToHttpRequestFeature(HttpListenerContext context)
         {
             var httpRequestFeature = new HttpRequestFeature
@@ -324,11 +352,11 @@ namespace SHPA.Blockchain.SimpleServer
                 Body = context.Request.InputStream,
                 Headers = new HeaderDictionary(context.Request.Headers.Count),
                 Method = context.Request.HttpMethod,
-                Path = context.Request.RawUrl,
+                Path = context.Request.Url!.LocalPath,
                 Protocol = context.Request.ProtocolVersion.ToString(),
-                PathBase = context.Request.RawUrl,
-                QueryString = context.Request.QueryString.ToString(),
-                Scheme = "http"
+                PathBase = string.Empty,
+                QueryString = context.Request.Url.Query,
+                Scheme = context.Request.Url.Scheme
             };
             foreach (var requestHeaderKey in context.Request.Headers.AllKeys)
             {
@@ -336,17 +364,20 @@ namespace SHPA.Blockchain.SimpleServer
             }
             return httpRequestFeature;
         }
-        internal protected IHttpRequestFeature? _currentIHttpRequestFeature;
-        public string Protocol { get; set; }
-        public string Scheme { get; set; }
-        public string Method { get; set; }
-        public string PathBase { get; set; }
-        public string Path { get; set; }
-        public string QueryString { get; set; }
-        public string RawTarget { get; set; }
-        public IHeaderDictionary Headers { get; set; }
-        public Stream Body { get; set; }
-        #endregion
+        private IHttpResponseFeature ToHttpResponseFeature(HttpListenerContext context)
+        {
+            var httpResponseFeature = new HttpResponseFeature
+            {
+                Body = context.Response.OutputStream,
+                Headers = Get<IHttpRequestFeature>().Headers,
+            };
+            httpResponseFeature.OnCompleted(o =>
+            {
+                httpResponseFeature.Body.Close();
+                return Task.CompletedTask;
+            }, null);
 
+            return httpResponseFeature;
+        }
     }
 }
