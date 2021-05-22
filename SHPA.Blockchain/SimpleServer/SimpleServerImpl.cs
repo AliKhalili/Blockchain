@@ -29,7 +29,7 @@ namespace SHPA.Blockchain.SimpleServer
                 var url = _options.CodeBackedListenOption.ToUrl();
                 _listener.Prefixes.Add(_options.CodeBackedListenOption.ToUrl());
                 _listener.Start();
-                Console.WriteLine("Now listening on: {0}", url);
+                _logger.LogInformation("Now listening on: {0}", url);
                 _ = Task.Run(() =>
                   {
                       while (_listener.IsListening || !cancellationToken.IsCancellationRequested)
@@ -48,8 +48,7 @@ namespace SHPA.Blockchain.SimpleServer
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                _logger.LogError(e, "an exception has occurred in StartAsync method");
             }
         }
 
