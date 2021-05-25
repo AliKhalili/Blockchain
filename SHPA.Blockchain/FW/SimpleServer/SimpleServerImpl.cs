@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace SHPA.Blockchain.SimpleServer
+namespace SHPA.Blockchain.FW.SimpleServer
 {
     public class SimpleServerImpl : IServer
     {

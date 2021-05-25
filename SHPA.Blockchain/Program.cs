@@ -20,8 +20,8 @@ using SHPA.Blockchain.CQRS;
 using SHPA.Blockchain.CQRS.Bus;
 using SHPA.Blockchain.CQRS.Domain;
 using SHPA.Blockchain.CQRS.Domain.Commands;
+using SHPA.Blockchain.FW.SimpleServer;
 using SHPA.Blockchain.Server.Actions.Custom;
-using SHPA.Blockchain.SimpleServer;
 
 namespace SHPA.Blockchain
 {
@@ -98,13 +98,12 @@ namespace SHPA.Blockchain
             {
                 app.Run(async context =>
                 {
-                    Console.WriteLine(context.Request.QueryString);
+                    Thread.Sleep(2000);
                     var response = $"{DateTimeOffset.UtcNow.Ticks}- hello, world{Environment.NewLine}";
                     context.Response.ContentLength = response.Length;
                     context.Response.ContentType = "text/plain";
                     context.Response.StatusCode = 200;
                     await context.Response.WriteAsync(response);
-                    Console.WriteLine("waiting for another request");
                 });
             }
         }
@@ -117,6 +116,11 @@ namespace SHPA.Blockchain
                         options.Listen(IPAddress.Parse("127.0.0.1"), 8080);
                     });
                     webHostBuilder.UseStartup<Startup>();
+                }).ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddConsole();
+                    logging.SetMinimumLevel(LogLevel.Information);
                 });
     }
 }

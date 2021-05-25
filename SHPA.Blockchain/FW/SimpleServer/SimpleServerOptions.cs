@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace SHPA.Blockchain.SimpleServer
+namespace SHPA.Blockchain.FW.SimpleServer
 {
     public class SimpleServerOptions
     {

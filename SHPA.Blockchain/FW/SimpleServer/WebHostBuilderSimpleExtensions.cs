@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace SHPA.Blockchain.SimpleServer
+namespace SHPA.Blockchain.FW.SimpleServer
 {
     public static class WebHostBuilderSimpleExtensions
     {

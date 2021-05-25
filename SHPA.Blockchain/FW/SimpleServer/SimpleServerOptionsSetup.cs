@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Options;
 
-namespace SHPA.Blockchain.SimpleServer
+namespace SHPA.Blockchain.FW.SimpleServer
 {
     internal class SimpleServerOptionsSetup : IConfigureOptions<SimpleServerOptions>
     {

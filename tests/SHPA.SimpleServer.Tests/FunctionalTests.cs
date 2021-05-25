@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Xunit;
-using SHPA.Blockchain.SimpleServer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using SHPA.Blockchain.FW.SimpleServer;
 
 namespace SHPA.SimpleServer.Tests
 {
